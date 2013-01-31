@@ -1,0 +1,10 @@
+<phpunit
+    bootstrap="./tests/bootstrap.php"
+    colors="true"
+    >
+
+    <testsuite name="Hasher">
+        <directory>./tests/Abc/Hash/Test</directory>
+    </testsuite>
+
+</phpunit>
