@@ -2,22 +2,22 @@
 /**
  * HasherInterface.php
  *
- * ABC Manager 5
+ * AngryBytes Manager 5
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
  * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
  */
 
-namespace Abc\Hash;
+namespace AngryBytes\Hash;
 
 /**
  * HasherInterface
  *
  * Interface for hashers
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
  */

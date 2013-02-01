@@ -4,7 +4,7 @@
     >
 
     <testsuite name="Hasher">
-        <directory>./tests/Abc/Hash/Test</directory>
+        <directory>./tests/AngryBytes/Hash/Test</directory>
     </testsuite>
 
 </phpunit>

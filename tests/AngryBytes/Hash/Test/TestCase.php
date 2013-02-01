@@ -2,15 +2,15 @@
 /**
  * TestCase.php
  *
- * ABC Manager 5
+ * AngryBytes Manager 5
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
- * @subpackage      Tests
+ * @subpackage      Test
  * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
  */
 
-namespace Abc\Hash\Test;
+namespace AngryBytes\Hash\Test;
 
 use \PHPUnit_Framework_TestCase as PUTestCase;
 
@@ -19,9 +19,9 @@ use \PHPUnit_Framework_TestCase as PUTestCase;
  *
  * Testing memcached
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
- * @subpackage      Tests
+ * @subpackage      Test
  */
 abstract class TestCase extends PUTestCase
 {
