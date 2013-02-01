@@ -2,8 +2,6 @@
 /**
  * Blowfish.php
  *
- * AngryBytes Manager 5
- *
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
@@ -96,7 +94,7 @@ class Blowfish implements HasherInterface
     }
 
     /**
-     * Generate a bcrypt salt from an AngryBytes Manager default salt
+     * Generate a bcrypt salt from a string salt
      *
      * @param  string $salt
      * @return string
