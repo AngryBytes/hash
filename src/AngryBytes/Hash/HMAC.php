@@ -2,8 +2,6 @@
 /**
  * HMAC.php
  *
- * AngryBytes Manager 5
- *
  * @category        AngryBytes
  * @package         Hash
  * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)

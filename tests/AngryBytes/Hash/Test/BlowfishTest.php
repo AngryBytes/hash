@@ -2,8 +2,6 @@
 /**
  * BlowfishTest.php
  *
- * AngryBytes Manager 5
- *
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Test

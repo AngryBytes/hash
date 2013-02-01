@@ -2,8 +2,6 @@
 /**
  * MD5.php
  *
- * AngryBytes Manager 5
- *
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
