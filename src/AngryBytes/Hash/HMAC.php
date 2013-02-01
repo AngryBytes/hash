@@ -2,9 +2,9 @@
 /**
  * HMAC.php
  *
- * ABC Manager 5
+ * AngryBytes Manager 5
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
  * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
  */
@@ -14,7 +14,7 @@
  *
  * HMAC creator
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
  */
 class HMAC

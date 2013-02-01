@@ -2,29 +2,29 @@
 /**
  * BlowfishTest.php
  *
- * ABC Manager 5
+ * AngryBytes Manager 5
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
- * @subpackage      Tests
+ * @subpackage      Test
  * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
  */
 
-namespace Abc\Hash\Test;
+namespace AngryBytes\Hash\Test;
 
-use Abc\Hash\Test\TestCase;
+use AngryBytes\Hash\Test\TestCase;
 
-use Abc\Hash\Hash;
-use Abc\Hash\Hasher\Blowfish as BlowfishHasher;
+use AngryBytes\Hash\Hash;
+use AngryBytes\Hash\Hasher\Blowfish as BlowfishHasher;
 
 /**
  * BlowfishTest
  *
  * Testing file adapter
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
- * @subpackage      Tests
+ * @subpackage      Test
  */
 class BlowfishTest extends TestCase
 {
