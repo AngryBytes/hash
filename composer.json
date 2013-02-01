@@ -17,7 +17,7 @@
     "license": "MIT",
     "autoload": {
         "psr-0": {
-            "Abc\\Hash": "src"
+            "AngryBytes\\Hash": "src"
         }
     },
     "require-dev": {
