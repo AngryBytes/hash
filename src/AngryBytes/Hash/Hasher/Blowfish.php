@@ -2,17 +2,17 @@
 /**
  * Blowfish.php
  *
- * ABC Manager 5
+ * AngryBytes Manager 5
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
  * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
  */
 
-namespace Abc\Hash\Hasher;
+namespace AngryBytes\Hash\Hasher;
 
-use Abc\Hash\HasherInterface;
+use AngryBytes\Hash\HasherInterface;
 
 use \RuntimeException;
 use \InvalidArgumentException;
@@ -24,7 +24,7 @@ use \InvalidArgumentException;
  *
  * Relies on bcrypt/crypt() for the heavy lifting
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
  *
@@ -96,7 +96,7 @@ class Blowfish implements HasherInterface
     }
 
     /**
-     * Generate a bcrypt salt from an ABC Manager default salt
+     * Generate a bcrypt salt from an AngryBytes Manager default salt
      *
      * @param  string $salt
      * @return string

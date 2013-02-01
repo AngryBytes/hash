@@ -2,27 +2,27 @@
 /**
  * MD5Test.php
  *
- * ABC Manager 5
+ * AngryBytes Manager 5
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
  * @subpackage      Test
  * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
  */
 
-namespace Abc\Hash\Test;
+namespace AngryBytes\Hash\Test;
 
-use Abc\Hash\Test\TestCase;
+use AngryBytes\Hash\Test\TestCase;
 
-use Abc\Hash\Hash;
-use Abc\Hash\Hasher\MD5 as MD5Hasher;
+use AngryBytes\Hash\Hash;
+use AngryBytes\Hash\Hasher\MD5 as MD5Hasher;
 
 /**
  * MD5Test
  *
  * Testing md5 hasher
  *
- * @category        Abc
+ * @category        AngryBytes
  * @package         Hash
  * @subpackage      Test
  */

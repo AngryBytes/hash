@@ -2,18 +2,16 @@
 /**
  * Security
  *
- * ABC Manager 5
- *
- * @category    Abc
+ * @category    AngryBytes
  * @package     Hash
  * @copyright   Copyright (c) 2007-2012 Angry Bytes BV (http://www.angrybytes.com)
  */
 
-namespace Abc\Hash;
+namespace AngryBytes\Hash;
 
 use \InvalidArgumentException as InvalidArgumentException;
 
-use Abc\Hash\HasherInterface;
+use AngryBytes\Hash\HasherInterface;
 
 /**
  * Hash
@@ -23,7 +21,7 @@ use Abc\Hash\HasherInterface;
  * This hasher accepts a "salt" string that it uses for salting the hash
  * function.
  *
- * @category    Abc
+ * @category    AngryBytes
  * @package     Hash
  */
 class Hash
