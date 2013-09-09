@@ -10,7 +10,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/AngryBytes/abc-hash.git"
+            "url": "https://github.com/AngryBytes/hash.git"
         }
     ],
     "minimum-stability": "stable",
