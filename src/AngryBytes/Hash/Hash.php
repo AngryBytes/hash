@@ -9,9 +9,9 @@
 
 namespace AngryBytes\Hash;
 
-use \InvalidArgumentException as InvalidArgumentException;
-
 use AngryBytes\Hash\HasherInterface;
+
+use \InvalidArgumentException;
 
 /**
  * Hash
