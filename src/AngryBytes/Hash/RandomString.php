@@ -9,6 +9,8 @@
 
 namespace AngryBytes\Hash;
 
+use \RuntimeException;
+
 /**
  * Random string generator
  *
