@@ -58,7 +58,7 @@ class RandomString
     private static function generateBytesPHP($bytes)
     {
         $output = '';
-        for ($i = 0; $i < $len; ++$i) {
+        for ($x = 0; $x < $bytes; $x++) {
             $output .= chr(mt_rand(0, 255));
         }
 
