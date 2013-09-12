@@ -9,8 +9,6 @@
 
 namespace AngryBytes\Hash;
 
-use \RuntimeException;
-
 /**
  * Random string generator
  *
@@ -32,10 +30,38 @@ class RandomString
         // Open /dev/urandom for reading
         $fp = @fopen('/dev/urandom','rb');
 
+        // In case we can not read from /dev/urandom, we will need to generate
+        // some bytes ourselves. This is less secure.
         if ($fp === false) {
-            throw new RuntimeException('Can not read from /dev/urandom');
+            return self::generateBytesPHP($bytes);
         }
 
-        return fread($fp, $bytes);
+        // Read the required number of bytes
+        $bytes =  fread($fp, $bytes);
+
+        // Close the file handle
+        fclose($fp);
+
+        // Return them
+        return $bytes;
+    }
+
+    /**
+     * Generate random bytes using PHP
+     *
+     * This is less secure than using the operating system, but it is more
+     * reliable.
+     *
+     * @param  int    $bytes
+     * @return string
+     **/
+    private static function generateBytesPHP($bytes)
+    {
+        $output = '';
+        for ($i = 0; $i < $len; ++$i) {
+            $output .= chr(mt_rand(0, 255));
+        }
+
+        return $output;
     }
 }
