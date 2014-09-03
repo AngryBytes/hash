@@ -1,5 +1,8 @@
 # AngryBytes Hash
 
+[![Build Status](https://travis-ci.org/AngryBytes/hash.svg?branch=master)](https://travis-ci.org/AngryBytes/hash)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/AngryBytes/hash/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/AngryBytes/hash/?branch=master)
+
 A simple PHP library that simplifies cryptographical hashing. It provides an
 object oriented interface to a variety of hashing methods.
 
