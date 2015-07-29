@@ -37,7 +37,7 @@ class RandomString
         }
 
         // Read the required number of bytes
-        $bytes =  fread($fp, $bytes);
+        $bytes = fread($fp, $bytes);
 
         // Close the file handle
         fclose($fp);
