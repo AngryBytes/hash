@@ -127,6 +127,29 @@ class BlowfishTest extends TestCase
     }
 
     /**
+     * Test salting
+     **/
+    public function testSalt()
+    {
+        $hasher = $this->createHasher();
+        $hasher->getHasher()->setWorkFactor(5);
+
+        // Test salt with 22 valid characters
+        $this->assertEquals(
+            // Pre-generated hash outcome for password 'foo' and given salt
+            '$2y$05$./A1aaaaaaaaaaaaaaaaaOZW9OJaO6Alj4.ZDbOi6Jrbn.bGZfYRK',
+            $hasher->getHasher()->hash('foo', './A1aaaaaaaaaaaaaaaaaa')
+        );
+
+        // Test salt with less invalid characters
+        $this->assertEquals(
+            // Pre-generated hash outcome for password 'foo' and given salt (md5'ed)
+            '$2y$05$ceb20772e0c9d240c75ebugm2AOmnuR5.LsdpDZGAjkE1DupDTPFW',
+            $hasher->getHasher()->hash('foo', 'salt')
+        );
+    }
+
+    /**
      * Create hasher
      *
      * @return Hash
