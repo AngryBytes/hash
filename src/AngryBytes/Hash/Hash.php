@@ -45,7 +45,6 @@ class Hash
      *
      * @param  HasherInterface $hasher
      * @param  string          $salt
-     * @return void
      **/
     public function __construct(HasherInterface $hasher, $salt)
     {
@@ -97,10 +96,10 @@ class Hash
     {
         // Make sure it's of sufficient length
         if (strlen($salt) < 20) {
-            throw new InvalidArgumentException('
-                Provided salt "' . $salt . '" is not long enough.
-                A minimum length of 20 characters is required
-            ');
+            throw new InvalidArgumentException(sprintf(
+                'Provided salt "%s" is not long enough. A minimum length of 20 characters is required',
+                $salt
+            ));
         }
 
         $this->salt = $salt;
@@ -168,7 +167,7 @@ class Hash
      * @param  string $hash
      * @return bool
      **/
-    public function matchesShortHash($compareTo)
+    public function matchesShortHash()
     {
         // Full args to method
         $args = func_get_args();

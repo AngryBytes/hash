@@ -33,16 +33,16 @@ class Blowfish implements HasherInterface
     /**
      * Work factor for blowfish
      *
+     * Defaults to '15' (32768 iterations)
+     *
      * @var int
      **/
     private $workFactor = 15;
 
     /**
-     * Constructor
+     * Detect Blowfish support
      *
      * @throws RuntimeException
-     *
-     * @return void
      **/
     public function __construct()
     {
@@ -66,7 +66,7 @@ class Blowfish implements HasherInterface
     /**
      * Set the blowfish work factor
      *
-     * @param int $workFactor
+     * @param  int $workFactor
      * @return Blowfish
      */
     public function setWorkFactor($workFactor)
@@ -76,7 +76,7 @@ class Blowfish implements HasherInterface
                 'Work factor needs to be greater than 3 and smaller than 32'
             );
         }
-        $this->workFactor = $workFactor;
+        $this->workFactor = (int) $workFactor;
 
         return $this;
     }
@@ -97,7 +97,7 @@ class Blowfish implements HasherInterface
      * Generate a bcrypt salt from a string salt
      *
      * @param  string $salt
-     * @return string
+     * @return string       Format: "$2y$[workfactor]$[salt]$"
      **/
     private function bcryptSalt($salt)
     {
@@ -112,17 +112,22 @@ class Blowfish implements HasherInterface
     }
 
     /**
-     * Get valid salt substr for blowfish
+     * Get valid salt string for Blowfish usage
      *
-     * Blowfish accepts 22 chars as a salt
-     *
-     * Will take a hash of $salt to take changes over 22 chars into account
+     * Blowfish accepts 22 chars (./0-9A-Za-z) as a salt if anything else is passed,
+     * this method will take a hash of $salt to transform it into 22 supported characters
      *
      * @param  string $salt
      * @return string
      **/
     private static function getSaltSubstr($salt)
     {
+        // Return salt when it is a valid Blowfish salt
+        if (preg_match('!^[\./0-9A-Za-z]{22}$!', $salt) === 1) {
+            return $salt;
+        }
+
+        // fallback to md5() to make the salt valid
         return substr(
             md5($salt),
             0, 22
