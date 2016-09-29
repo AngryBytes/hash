@@ -1,25 +1,20 @@
 <?php
 /**
- * Security
+ * Hash.php
  *
  * @category    AngryBytes
  * @package     Hash
- * @copyright   Copyright (c) 2007-2012 Angry Bytes BV (http://www.angrybytes.com)
+ * @copyright   Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
  */
 
 namespace AngryBytes\Hash;
-
-use AngryBytes\Hash\HasherInterface;
 
 use \InvalidArgumentException;
 
 /**
  * Hash
  *
- * Hash generation and comparison methods.
- *
- * This hasher accepts a "salt" string that it uses for salting the hash
- * function.
+ * A collection of hash generation and comparison methods.
  *
  * @category    AngryBytes
  * @package     Hash
@@ -29,7 +24,7 @@ class Hash
     /**
      * Salt for hashing
      *
-     * @var string
+     * @var string|bool
      **/
     private $salt;
 
@@ -43,10 +38,10 @@ class Hash
     /**
      * Constructor
      *
-     * @param  HasherInterface $hasher
-     * @param  string          $salt
+     * @param  HasherInterface $hasher The hasher to be used
+     * @param  string|bool     $salt (optional) Omit if the hasher creates its own salt
      **/
-    public function __construct(HasherInterface $hasher, $salt)
+    public function __construct(HasherInterface $hasher, $salt = false)
     {
         $this
             ->setHasher($hasher)
@@ -79,7 +74,7 @@ class Hash
     /**
      * Get the salt
      *
-     * @return string
+     * @return string|bool
      */
     public function getSalt()
     {
@@ -89,17 +84,19 @@ class Hash
     /**
      * Set the salt
      *
-     * @param  string $salt
+     * @param  string|bool $salt
      * @return Hash
      */
     public function setSalt($salt)
     {
-        // Make sure it's of sufficient length
-        if (strlen($salt) < 20) {
-            throw new InvalidArgumentException(sprintf(
-                'Provided salt "%s" is not long enough. A minimum length of 20 characters is required',
-                $salt
-            ));
+        if ($salt) {
+            // Make sure it's of sufficient length
+            if (strlen($salt) < 20) {
+                throw new InvalidArgumentException(sprintf(
+                    'Provided salt "%s" is not long enough. A minimum length of 20 characters is required',
+                    $salt
+                ));
+            }
         }
 
         $this->salt = $salt;
@@ -110,21 +107,31 @@ class Hash
     /**
      * Generate a hash
      *
-     * Will accept any number of (serializable) variables
+     * Accepts any type of variable. Non-scalar values will be serialized before hashing.
      *
-     * @param mixed $what1
-     * @param mixed $what2
-     * ...
-     * @param  mixed  $whatN
+     * @param mixed $data The data to hash
      * @return string
      **/
-    public function hash()
+    public function hash($data)
     {
         return $this->getHasher()->hash(
-            call_user_func_array(
-                array($this, 'getDataString'),
-                func_get_args()
-            ),
+            $this->getDataString($data),
+            $this->getSalt()
+        );
+    }
+
+    /**
+     * Verify if the data matches the hash
+     *
+     * @param mixed $data
+     * @param string $hash
+     * @return bool
+     */
+    public function verify($data, $hash)
+    {
+        return $this->getHasher()->verify(
+            $this->getDataString($data),
+            $hash,
             $this->getSalt()
         );
     }
@@ -132,68 +139,47 @@ class Hash
     /**
      * Hash something into a short hash
      *
-     * This is simply a shortened version of hash(), returning a 7 character
-     * hash, which should be good enough for identification purposes. It is
-     * however *not* strong enough for cryptographical uses or password
-     * storage. Use only to create a fast, short string to compare or identify.
+     * This is simply a shortened version of hash(), returning a 7 character hash, which should be good
+     * enough for identification purposes. Therefore it MUST NOT be used for cryptographic purposes or
+     * password storage but only to create a fast, short string to compare or identify.
+     *
+     * It is RECOMMENDED to only use this method with the Hasher\MD5 hasher as hashes
+     * created by bcrypt/crypt() have a common beginning.
      *
      * @see Hash::hash()
      *
-     * @param mixed $what1
-     * @param mixed $what2
-     * ...
-     * @param  mixed  $whatN
      * @return string
      **/
-    public function shortHash()
+    public function shortHash($data)
     {
-        $fullHash = call_user_func_array(
-            array($this, 'hash'),
-            func_get_args()
-        );
-
-        return substr($fullHash, 0, 7);
+        return substr($this->hash(
+            $this->getDataString($data)
+        ), 0, 7);
     }
 
     /**
-     * Does something match a short hash?
-     *
-     * First argument to this function is the short hash as it *should* be, all other arguments will
-     * be passed to shortHash()
+     * Verify if the data matches the shortHash
      *
      * @see Hash::shortHash()
      *
-     * @param  mixed  $what
-     * @param  string $hash
+     * @param mixed $data
+     * @param string $shortHash
      * @return bool
      **/
-    public function matchesShortHash()
+    public function verifyShortHash($data, $shortHash)
     {
-        // Full args to method
-        $args = func_get_args();
+        $data = $this->getDataString($data);
 
-        // Remove compareTo from the beginning
-        $compareTo = array_shift($args);
-
-        // Create short hash to compare to
-        $shortHash = call_user_func_array(
-            array($this, 'shortHash'),
-            $args
+        return self::compare(
+            $this->shortHash($data),
+            $shortHash
         );
-
-        // Compare and return
-        return self::compare($compareTo, $shortHash);
     }
 
     /**
      * Compare two hashes
      *
-     * This method is time-safe, i.e. it will take the same amount of time to
-     * execute for all inputs. This is critical to avoid timing attacks.
-     *
-     * NOTE:
-     *
-     * **This method only works on ASCII strings.**
+     * Uses the time-save `hash_equals()` function to compare 2 hashes.
      *
      * @param  string $hashA
      * @param  string $hashB
@@ -201,38 +187,22 @@ class Hash
      **/
     public static function compare($hashA, $hashB)
     {
-        // Compare length
-        if (strlen($hashA) !== strlen($hashB)) {
-            return false;
-        }
-
-        // bitwise OR total for all characters
-        $result = 0;
-
-        for ($charIndex = 0; $charIndex < strlen($hashA); $charIndex++) {
-            // XOR the value of the ASCII characters at $charIndex
-            // This value is then OR-ed into the total
-            $result |= ord($hashA[$charIndex]) ^ ord($hashB[$charIndex]);
-        }
-
-        // If the result is anything but 0 there was a differing character at
-        // one or more of the positions
-        return $result === 0;
+        return hash_equals($hashA, $hashB);
     }
 
     /**
-     * Get the passed arguments as a string
+     * Get the data as a string
      *
-     * Accepts anything serializable
+     * Will serialize non-scalar values
      *
-     * @param mixed $what1
-     * @param mixed $what2
-     * ...
-     * @param  mixed  $whatN
      * @return string
      **/
-    private function getDataString()
+    private function getDataString($data)
     {
-        return serialize(func_get_args());
+        if (is_scalar($data)) {
+            return $data;
+        }
+
+        return serialize($data);
     }
 }

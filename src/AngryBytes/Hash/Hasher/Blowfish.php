@@ -5,11 +5,12 @@
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
- * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
+ * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
  */
 
 namespace AngryBytes\Hash\Hasher;
 
+use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\HasherInterface;
 
 use \RuntimeException;
@@ -18,15 +19,11 @@ use \InvalidArgumentException;
 /**
  * Blowfish
  *
- * Blowfish hasher
- *
- * Relies on bcrypt/crypt() for the heavy lifting
+ * Generate and verify Blowfish bcrypt/crypt() hashes using a salt
  *
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
- *
- * @hootie
  */
 class Blowfish implements HasherInterface
 {
@@ -82,15 +79,24 @@ class Blowfish implements HasherInterface
     }
 
     /**
-     * Hash password and salt
-     *
-     * @param  string $data
-     * @param  string $salt
-     * @return string
-     **/
+     * {@inheritDoc}
+     */
     public function hash($data, $salt)
     {
         return crypt($data, $this->bcryptSalt($salt));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Hash::compare()
+     */
+    public function verify($data, $hash, $salt)
+    {
+        return Hash::compare(
+            $this->hash($data, $salt),
+            $hash
+        );
     }
 
     /**
@@ -134,4 +140,3 @@ class Blowfish implements HasherInterface
         );
     }
 }
-

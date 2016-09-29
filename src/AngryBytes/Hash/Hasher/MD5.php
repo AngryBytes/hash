@@ -10,14 +10,18 @@
 
 namespace AngryBytes\Hash\Hasher;
 
+use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\HasherInterface;
 
 /**
  * MD5
  *
- * MD5 hasher.
+ * Generate and verify MD5 hashes using a salt
  *
- * You probably shouldn't use this for passwords
+ * NOTE:
+ *
+ * This hasher MUST NOT be used for password storage. It is RECOMMENDED
+ * to use the Hasher\Password for this purpose
  *
  * @category        AngryBytes
  * @package         Hash
@@ -26,14 +30,23 @@ use AngryBytes\Hash\HasherInterface;
 class MD5 implements HasherInterface
 {
     /**
-     * Hash a value using md5
-     *
-     * @param string $data
-     * @param string $salt
-     * @return string
+     * {@inheritDoc}
      */
     public function hash($data, $salt)
     {
         return md5($data . '-' . $salt);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Hash::compare()
+     */
+    public function verify($data, $hash, $salt)
+    {
+        return Hash::compare(
+            $this->hash($data, $salt),
+            $hash
+        );
     }
 }

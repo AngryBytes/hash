@@ -5,7 +5,7 @@
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
- * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
+ * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
  */
 
 namespace AngryBytes\Hash;
@@ -31,4 +31,14 @@ interface HasherInterface
      * @return string
      **/
     public function hash($data, $salt);
+
+    /**
+     * Verify is the data string matches the given hash
+     *
+     * @param string $data
+     * @param string $hash
+     * @param string $salt
+     * @return bool
+     */
+    public function verify($data, $hash, $salt);
 }
