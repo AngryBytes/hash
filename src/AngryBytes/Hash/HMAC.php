@@ -4,10 +4,10 @@
  *
  * @category        AngryBytes
  * @package         Hash
- * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
+ * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
  */
 
-use Angrybytes\Hash\Hash;
+namespace AngryBytes\Hash;
 
 use \InvalidArgumentException;
 
@@ -33,8 +33,7 @@ class HMAC
     /**
      * Constructor
      *
-     * @param  string $algorithm
-     * @return void
+     * @param string $algorithm
      **/
     public function __construct($algorithm)
     {
