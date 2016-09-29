@@ -70,6 +70,43 @@ class MD5Test extends TestCase
     }
 
     /**
+     * Test verification of string hashes
+     */
+    public function testVerifyString()
+    {
+        $hasher = $this->createHasher();
+
+        $this->assertTrue(
+            $hasher->verify('foo', 'f149d11c9f6d8e899772b855588722f2')
+        );
+
+        $this->assertFalse(
+            $hasher->verify('bar', 'f149d11c9f6d8e899772b855588722f2')
+        );
+    }
+
+    /**
+     * Test verification of object hashes
+     */
+    public function testVerifyHashObject()
+    {
+        $hasher = $this->createHasher();
+
+        $obj = new \stdClass;
+        $obj->foo = 'bar';
+
+        $this->assertTrue(
+            $hasher->verify($obj, '2f4162ad4b8774272e452efafd25972f')
+        );
+
+        $obj->bar = 'foo';
+
+        $this->assertFalse(
+            $hasher->verify($obj, '2f4162ad4b8774272e452efafd25972f')
+        );
+    }
+
+    /**
      * Create hasher
      *
      * @return Hash
