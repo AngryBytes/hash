@@ -75,6 +75,48 @@ class BlowfishTest extends TestCase
     }
 
     /**
+     * Test verification of string hashes
+     */
+    public function testStringVerify()
+    {
+        $hasher = $this->createHasher();
+
+        $this->assertTrue(
+            $hasher->verify('foo', '$2y$15$aa5c57dda7634fc90a92duQSfz3E1u39Z6s63i6l5QpvgJK5tSKri')
+        );
+
+        $this->assertFalse(
+            $hasher->verify('bar', '$2y$15$aa5c57dda7634fc90a92duQSfz3E1u39Z6s63i6l5QpvgJK5tSKri')
+        );
+    }
+
+    /**
+     * Test verification of object hashes
+     */
+    public function testObjectVerify()
+    {
+        $hasher = $this->createHasher();
+
+        // Complex data
+        $data = array(
+            new \stdClass,
+            array('foo', 'bar'),
+            12345
+        );
+
+        $this->assertTrue(
+            $hasher->verify($data, '$2y$15$aa5c57dda7634fc90a92duDv2OoNSn8R.p3.GSoaEZd6/vdiiq9lG')
+        );
+
+        // Append to data
+        $data[] = 'foo';
+
+        $this->assertFalse(
+            $hasher->verify($data, '$2y$15$aa5c57dda7634fc90a92duDv2OoNSn8R.p3.GSoaEZd6/vdiiq9lG')
+        );
+    }
+
+    /**
      * Test invalid work factor
      *
      * @expectedException \InvalidArgumentException
