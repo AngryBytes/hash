@@ -37,11 +37,9 @@ class Password implements HasherInterface
     /**
      * Cost factor for the algorithm
      *
-     * Defaults to '15' (32768 iterations)
-     *
      * @var int
      */
-    private $cost = 15;
+    private $cost;
 
     /**
      * Get cost
@@ -81,7 +79,11 @@ class Password implements HasherInterface
     public function hash($data, $salt = false)
     {
         // Set hash options
-        $options = ['cost' => $this->cost];
+        $options = [];
+
+        if (is_int($this->cost)) {
+            $options['cost'] = $this->cost;
+        }
         if ($salt) {
             $options['salt'] = $salt;
         }
@@ -117,7 +119,11 @@ class Password implements HasherInterface
     public function needsRehash($hash, $salt = false)
     {
         // Set hash options
-        $options = ['cost' => $this->cost];
+        $options = [];
+
+        if (is_int($this->cost)) {
+            $options['cost'] = $this->cost;
+        }
         if ($salt) {
             $options['salt'] = $salt;
         }

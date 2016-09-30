@@ -90,7 +90,7 @@ class PasswordTest extends TestCase
 
     /**
      * Test invalid cost factor
-     * 
+     *
      * @expectedException \InvalidArgumentException
      */
     public function testCostTooHigh()
