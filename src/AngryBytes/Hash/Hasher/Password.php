@@ -55,11 +55,16 @@ class Password implements HasherInterface
      * Set cost
      *
      * @throws InvalidArgumentException if the cost is too high or low
-     * @param int $cost
+     * @param int|null $cost
      * @return $this
      */
     public function setCost($cost)
     {
+        if (is_null($cost)) {
+            // Use default cost
+            return $this;
+        }
+
         if ($cost < 4 || $cost > 31) {
             throw new InvalidArgumentException(
                 'Cost needs to be greater than 3 and smaller than 32'
