@@ -46,11 +46,11 @@ class PasswordTest extends TestCase
         $hasher = $this->createHasher();
 
         $this->assertTrue(
-            $hasher->verify('foo', '$2y$15$l7l05fKprnFw8Lpgg2TZwuxqf2bKLolUxpJDruR6YiasGNkFZgfae')
+            $hasher->verify('foo', '$2y$10$Ch4CoMWaM6KR0ZfC3ZKvc.FAW1U30luCURlyahm/XgzJ4TWDwWPFW')
         );
 
         $this->assertFalse(
-            $hasher->verify('bar', '$2y$15$l7l05fKprnFw8Lpgg2TZwuxqf2bKLolUxpJDruR6YiasGNkFZgfae')
+            $hasher->verify('bar', '$2y$10$Ch4CoMWaM6KR0ZfC3ZKvc.FAW1U30luCURlyahm/XgzJ4TWDwWPFW')
         );
     }
 
@@ -69,7 +69,7 @@ class PasswordTest extends TestCase
         );
 
         // Adjust the hash cost, this should require a rehash
-        $hasher->getHasher()->setCost(16);
+        $hasher->getHasher()->setCost(15);
 
         $this->assertTrue(
             $hasher->getHasher()->needsRehash($hash)
