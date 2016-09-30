@@ -152,9 +152,7 @@ class Hash
      **/
     public function shortHash($data)
     {
-        return substr($this->hash(
-            $this->getDataString($data)
-        ), 0, 7);
+        return substr($this->hash($data), 0, 7);
     }
 
     /**
@@ -168,8 +166,6 @@ class Hash
      **/
     public function verifyShortHash($data, $shortHash)
     {
-        $data = $this->getDataString($data);
-
         return self::compare(
             $this->shortHash($data),
             $shortHash
