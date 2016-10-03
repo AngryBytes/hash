@@ -43,6 +43,7 @@ class HMAC
     /**
      * Does this platform support an algorithm?
      *
+     * @param string $algorithm
      * @return bool
      **/
     public static function platformSupports($algorithm)
