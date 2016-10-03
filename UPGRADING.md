@@ -89,7 +89,7 @@ if (Hash::matchShortHash($hash, $existingHash)) {
     // Hash is valid
 }
 
-/** New way *
+/** New way */
 
 if ($hasher->verifyShortHash($value, $existingHash)) {
     // Hash is valid
