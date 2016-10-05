@@ -74,7 +74,7 @@ class Hash
     /**
      * Get the salt
      *
-     * @return string|bool
+     * @return string|null
      */
     public function getSalt()
     {
@@ -90,7 +90,7 @@ class Hash
     public function setSalt($salt)
     {
         // Make sure it's of sufficient length
-        if (is_string($salt) && strlen($salt) < 20) {
+        if (is_string($salt) && strlen($salt) < 20 && strlen($salt) < CRYPT_SALT_LENGTH) {
             throw new InvalidArgumentException(sprintf(
                 'Provided salt "%s" is not long enough. A minimum length of 20 characters is required',
                 $salt
@@ -113,7 +113,7 @@ class Hash
     public function hash($data)
     {
         return $this->getHasher()->hash(
-            $this->getDataString($data),
+            self::getDataString($data),
             $this->getSalt()
         );
     }
@@ -128,7 +128,7 @@ class Hash
     public function verify($data, $hash)
     {
         return $this->getHasher()->verify(
-            $this->getDataString($data),
+            self::getDataString($data),
             $hash,
             $this->getSalt()
         );
@@ -191,7 +191,7 @@ class Hash
      *
      * @return string
      **/
-    private function getDataString($data)
+    private static function getDataString($data)
     {
         if (is_scalar($data)) {
             return (string) $data;
