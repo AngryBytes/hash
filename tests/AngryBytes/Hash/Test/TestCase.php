@@ -13,9 +13,7 @@ namespace AngryBytes\Hash\Test;
 use \PHPUnit_Framework_TestCase as PUTestCase;
 
 /**
- * TestCase
- *
- * Testing hashing
+ * Hashing test case
  *
  * @category        AngryBytes
  * @package         Hash

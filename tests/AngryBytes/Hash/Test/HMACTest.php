@@ -13,9 +13,7 @@ namespace AngryBytes\Hash\Test;
 use AngryBytes\Hash\HMAC;
 
 /**
- * HMACTest
- *
- * Testing HMAC hasher
+ * Test the HMAC hasher
  *
  * @category        AngryBytes
  * @package         Hash

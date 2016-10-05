@@ -14,9 +14,7 @@ use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\Hasher\MD5 as MD5Hasher;
 
 /**
- * MD5Test
- *
- * Testing md5 hasher
+ * Test the md5 hasher
  *
  * @category        AngryBytes
  * @package         Hash

@@ -14,9 +14,7 @@ use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\Hasher\Blowfish as BlowfishHasher;
 
 /**
- * BlowfishTest
- *
- * Testing blowfish hasher
+ * Test the blowfish haser
  *
  * @category        AngryBytes
  * @package         Hash
@@ -25,7 +23,7 @@ use AngryBytes\Hash\Hasher\Blowfish as BlowfishHasher;
 class BlowfishTest extends TestCase
 {
     /**
-     * Test hashing of blowfish
+     * Test simple string hashing
      *
      * @return void
      **/
@@ -45,7 +43,7 @@ class BlowfishTest extends TestCase
     }
 
     /**
-     * Test complex serialized data
+     * Test complex serialized data hashing
      *
      * @return void
      **/
@@ -143,7 +141,7 @@ class BlowfishTest extends TestCase
     }
 
     /**
-     * Test hashing of blowfish
+     * Test work factor alteration
      *
      * @return void
      **/
@@ -178,14 +176,20 @@ class BlowfishTest extends TestCase
         $this->assertEquals(
             // Pre-generated hash outcome for password 'foo' and given salt
             '$2y$05$./A1aaaaaaaaaaaaaaaaaOZW9OJaO6Alj4.ZDbOi6Jrbn.bGZfYRK',
-            $hasher->getHasher()->hash('foo', './A1aaaaaaaaaaaaaaaaaa')
+            $hasher->getHasher()->hash(
+                'foo',
+                ['salt' => './A1aaaaaaaaaaaaaaaaaa']
+            )
         );
 
         // Test salt with less invalid characters
         $this->assertEquals(
             // Pre-generated hash outcome for password 'foo' and given salt (md5'ed)
             '$2y$05$ceb20772e0c9d240c75ebugm2AOmnuR5.LsdpDZGAjkE1DupDTPFW',
-            $hasher->getHasher()->hash('foo', 'salt')
+            $hasher->getHasher()->hash(
+                'foo',
+                ['salt' => 'salt']
+            )
         );
     }
 

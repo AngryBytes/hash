@@ -95,6 +95,7 @@ class Hash
      *
      * @param mixed $data
      * @param string $hash
+     * @param mixed[] $options
      * @return bool
      */
     public function verify($data, $hash, array $options = [])
@@ -119,7 +120,7 @@ class Hash
      * @see Hash::hash()
      *
      * @param string $data
-     * @param mixed[] $options Additional hasher options
+     * @param mixed[] $options
      * @return string
      */
     public function shortHash($data, array $options = [])
@@ -134,7 +135,7 @@ class Hash
      *
      * @param mixed $data
      * @param string $shortHash
-     * @param mixed[] $options Additional hasher options
+     * @param mixed[] $options
      * @return bool
      **/
     public function verifyShortHash($data, $shortHash, array $options = [])
@@ -198,10 +199,17 @@ class Hash
         return serialize($data);
     }
 
+    /**
+     * Merge the default and provided hash options
+     *
+     * @param mixed[] $options
+     * @return mixed[]
+     */
     private function parseHashOptions(array $options = [])
     {
         $defaultOptions = [];
 
+        // Pass the salt if set
         if (is_null($this->salt) === false) {
             $defaultOptions['salt'] = $this->salt;
         }

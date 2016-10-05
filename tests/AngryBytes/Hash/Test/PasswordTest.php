@@ -14,9 +14,7 @@ use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\Hasher\Password as PasswordHasher;
 
 /**
- * PasswordTest
- *
- * Testing password hasher
+ * Test the password hasher
  *
  * @category        AngryBytes
  * @package         Hash
