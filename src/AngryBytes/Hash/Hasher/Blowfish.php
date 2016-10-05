@@ -81,9 +81,9 @@ class Blowfish implements HasherInterface
     /**
      * {@inheritDoc}
      */
-    public function hash($data, $salt)
+    public function hash($string, $salt)
     {
-        return crypt($data, $this->bcryptSalt($salt));
+        return crypt($string, $this->bcryptSalt($salt));
     }
 
     /**
@@ -91,10 +91,10 @@ class Blowfish implements HasherInterface
      *
      * @see Hash::compare()
      */
-    public function verify($data, $hash, $salt)
+    public function verify($string, $hash, $salt)
     {
         return Hash::compare(
-            $this->hash($data, $salt),
+            $this->hash($string, $salt),
             $hash
         );
     }

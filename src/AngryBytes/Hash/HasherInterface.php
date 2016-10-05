@@ -26,19 +26,19 @@ interface HasherInterface
      *
      * Implementation is supposed to salt the hashing method using $salt
      *
-     * @param string $data
+     * @param string $string
      * @param string $salt
      * @return string
      **/
-    public function hash($data, $salt);
+    public function hash($string, $salt);
 
     /**
      * Verify is the data string matches the given hash
      *
-     * @param string $data
+     * @param string $string
      * @param string $hash
      * @param string $salt
      * @return bool
      */
-    public function verify($data, $hash, $salt);
+    public function verify($string, $hash, $salt);
 }

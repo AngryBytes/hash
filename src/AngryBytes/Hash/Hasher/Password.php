@@ -28,13 +28,6 @@ use \RuntimeException;
 class Password implements HasherInterface
 {
     /**
-     * The hashing algorithm
-     *
-     * @var int
-     */
-    const ALGORITHM = PASSWORD_DEFAULT;
-
-    /**
      * Cost factor for the algorithm
      *
      * @var int
@@ -81,7 +74,7 @@ class Password implements HasherInterface
      * @throws RuntimeException If the hashing fails
      * @param string|bool $salt (optional) When omitted `password_hash()` will generate it's own salt
      */
-    public function hash($data, $salt = false)
+    public function hash($string, $salt = false)
     {
         // Set hash options
         $options = [];
@@ -93,9 +86,9 @@ class Password implements HasherInterface
             $options['salt'] = $salt;
         }
 
-        $hash = password_hash($data, self::ALGORITHM, $options);
+        $hash = password_hash($string, PASSWORD_DEFAULT, $options);
 
-        if (!$hash) {
+        if ($hash === false) {
             throw RuntimeException('Failed to hash password');
         }
 
@@ -107,9 +100,9 @@ class Password implements HasherInterface
      *
      * NOTE `$salt` is not used, `password_verify()` retrieves the used salt from the `$hash`
      */
-    public function verify($data, $hash, $salt)
+    public function verify($string, $hash, $salt)
     {
-        return password_verify($data, $hash);
+        return password_verify($string, $hash);
     }
 
     /**
@@ -133,7 +126,7 @@ class Password implements HasherInterface
             $options['salt'] = $salt;
         }
 
-        return password_needs_rehash($hash, self::ALGORITHM, $options);
+        return password_needs_rehash($hash, PASSWORD_DEFAULT, $options);
     }
 
     /**

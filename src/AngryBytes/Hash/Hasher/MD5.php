@@ -32,9 +32,9 @@ class MD5 implements HasherInterface
     /**
      * {@inheritDoc}
      */
-    public function hash($data, $salt)
+    public function hash($string, $salt)
     {
-        return md5($data . '-' . $salt);
+        return md5($string . '-' . $salt);
     }
 
     /**
@@ -42,10 +42,10 @@ class MD5 implements HasherInterface
      *
      * @see Hash::compare()
      */
-    public function verify($data, $hash, $salt)
+    public function verify($string, $hash, $salt)
     {
         return Hash::compare(
-            $this->hash($data, $salt),
+            $this->hash($string, $salt),
             $hash
         );
     }

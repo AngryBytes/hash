@@ -24,7 +24,7 @@ class Hash
     /**
      * Salt for hashing
      *
-     * @var string|bool
+     * @var string|null
      **/
     private $salt;
 
@@ -41,7 +41,7 @@ class Hash
      * @param  HasherInterface $hasher The hasher to be used
      * @param  string|bool     $salt (optional) Omit if the hasher creates its own salt
      **/
-    public function __construct(HasherInterface $hasher, $salt = false)
+    public function __construct(HasherInterface $hasher, $salt = null)
     {
         $this
             ->setHasher($hasher)
@@ -84,19 +84,17 @@ class Hash
     /**
      * Set the salt
      *
-     * @param  string|bool $salt
+     * @param  string|null $salt
      * @return Hash
      */
     public function setSalt($salt)
     {
-        if ($salt) {
-            // Make sure it's of sufficient length
-            if (strlen($salt) < 20) {
-                throw new InvalidArgumentException(sprintf(
-                    'Provided salt "%s" is not long enough. A minimum length of 20 characters is required',
-                    $salt
-                ));
-            }
+        // Make sure it's of sufficient length
+        if (is_string($salt) && strlen($salt) < 20) {
+            throw new InvalidArgumentException(sprintf(
+                'Provided salt "%s" is not long enough. A minimum length of 20 characters is required',
+                $salt
+            ));
         }
 
         $this->salt = $salt;
@@ -196,7 +194,7 @@ class Hash
     private function getDataString($data)
     {
         if (is_scalar($data)) {
-            return $data;
+            return (string) $data;
         }
 
         return serialize($data);
