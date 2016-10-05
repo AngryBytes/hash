@@ -9,11 +9,17 @@ hashing passwords and other secure tokens. The hasher utilises PHP's native pass
 `password_hash()` and `password_verify()`, see [Password Hashing](http://php.net/manual/en/book.password.php).
 
 The password hasher has been setup to use PHP's default cost and algorithm. The default cost can however be overwritten
-via the `setCost()` method, like so:
+by providing a cost to the the constructor, like so
 
 ```php
-$hasher = new \AngryBytes\Hash\Hasher\Password;
-$hasher->setCost(15);
+use AngryBytes\Hash\Hasher\Password;
+use AngryBytes\Hash\Hash;
+
+// Create a password hasher with an cost factor of 15
+$hasher = new Hash(
+    new Password(15)
+);
+
 ```
 
 The password hasher offers a method to check if an existing hash needs to be rehashed. This can be the case if
@@ -41,7 +47,7 @@ $passwordHash = 'password hash';
 // Verify the password against the hash
 if ($hasher->verify($password, $passwordHash)) {
     // Check if the hash needs to be rehashed
-    if ($hasher->getHasher()->needsRehash($passwordHash)) {
+    if ($hasher->needsRehash($passwordHash)) {
         // Rehash the password
         $passwordHash = $hasher->hash($password);
     }
@@ -56,7 +62,7 @@ following three arguments:
 
 * `$data` - The data that needs to be hashed.
 * `$hash` - The hash that needs to match the hashed value of `$data`.
-* `$salt` - The salt used for hashing.
+* `$options` (optional) - An array with addition hasher options. What these options are depends on the active hasher.
 
 ### Refactored AngryBytes\Hash\Hash
 
@@ -64,23 +70,31 @@ following three arguments:
 handle their own salt, like `AngryBytes\Hash\Hasher\Password`.
 
 `AngryBytes\Hash\Hash::hash()` and `AngryBytes\Hash\Hash::shortHash()` no longer accept any number of arguments but
-only one. This single argument can however be of any type. All non-scalar types will be serialized before hashing. 
+only following two:
+
+* `$data` - The data that needs to be hashed. This data can be of any type, all non-scalar types will be
+ serialized before hashing.
+* `$options` (optional) - An array with options that will be passed to the hasher. What these options are depends
+ on the active hasher.
 
 `AngryBytes\Hash\Hash::verify()` is a new method that's available to validate a hash in a time-safe manner.
-The method accepts the following two arguments:
+The method accepts the following arguments:
 
 * `$data` - The data that needs to be hashed. This data can be of any type, all non-scalar types will be
  serialized before hashing.
 * `$hash` - The hash that needs to match the hashed value of `$data`.
+* `$options` (optional) - An array with options that will be passed to the hasher. What these options are depends
+ on the active hasher.
 
 `AngryBytes\Hash\Hash::matchesShortHash()` is replaced by `AngryBytes\Hash\Hash::verifyShortHash()` this methods
-accepts two arguments (`$data` and `$hash`) just like `AngryBytes\Hash\Hash::verify()`.
+accepts three arguments (`$data`, `$hash` and `$options`) just like `AngryBytes\Hash\Hash::verify()`.
 
 ### Minor Changes
 
 * Scalar values passed to `hash()` and `shortHash()` are no longer serialized.
 * `compare()` Now uses PHP native `hash_equals()` function.
 * Fixed namespace issues for `AngryBytes\Hash\HMAC`.
+* `AngryBytes\Hash\Hash` now implements a `__call()` method that dynamically passes methods to the active hasher.
 
 ### Upgrading
 
