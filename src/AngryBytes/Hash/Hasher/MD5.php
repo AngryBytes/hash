@@ -34,8 +34,10 @@ class MD5 implements HasherInterface
     /**
      * {@inheritDoc}
      */
-    public function hash($data, $salt)
+    public function hash($data, array $options = [])
     {
+        $salt = isset($options['salt']) ? $options['salt'] : '';
+
         return md5($data . '-' . $salt);
     }
 
@@ -44,10 +46,10 @@ class MD5 implements HasherInterface
      *
      * @see Hash::compare()
      */
-    public function verify($data, $hash, $salt)
+    public function verify($data, $hash, array $options = [])
     {
         return Hash::compare(
-            $this->hash($data, $salt),
+            $this->hash($data, $options),
             $hash
         );
     }

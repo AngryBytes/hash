@@ -25,18 +25,18 @@ interface HasherInterface
      * Implementation is supposed to salt the hashing method using $salt
      *
      * @param string $data
-     * @param string $salt
+     * @param array $options Additional hasher options
      * @return string
      **/
-    public function hash($data, $salt);
+    public function hash($data, array $options = []);
 
     /**
      * Verify is the data string matches the given hash
      *
      * @param string $data
      * @param string $hash
-     * @param string $salt
+     * @param array $options Additional hasher options
      * @return bool
      */
-    public function verify($data, $hash, $salt);
+    public function verify($data, $hash, array $options = []);
 }

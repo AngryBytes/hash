@@ -38,16 +38,23 @@ class Blowfish implements HasherInterface
     private $workFactor = 15;
 
     /**
+     * Construct
+     *
      * Detect Blowfish support
      *
-     * @throws RuntimeException
-     **/
-    public function __construct()
+     * @throws \RuntimeException
+     * @param null|int $workFactor Override workfactor
+     */
+    public function __construct($workFactor = null)
     {
         if (!defined("CRYPT_BLOWFISH") || CRYPT_BLOWFISH !== 1) {
             throw new RuntimeException(
                 'Blowfish hashing not available on this installation'
             );
+        }
+
+        if (is_int($workFactor)) {
+            $this->setWorkFactor($workFactor);
         }
     }
 
@@ -82,9 +89,11 @@ class Blowfish implements HasherInterface
     /**
      * {@inheritDoc}
      */
-    public function hash($data, $salt)
+    public function hash($data, array $options = [])
     {
-        return crypt($data, $this->bcryptSalt($salt));
+        $salt = isset($options['salt']) ? $this->bcryptSalt($options['salt']) : null;
+
+        return crypt($data, $salt);
     }
 
     /**
@@ -92,10 +101,10 @@ class Blowfish implements HasherInterface
      *
      * @see Hash::compare()
      */
-    public function verify($data, $hash, $salt)
+    public function verify($data, $hash, array $options = [])
     {
         return Hash::compare(
-            $this->hash($data, $salt),
+            $this->hash($data, $options),
             $hash
         );
     }
