@@ -60,7 +60,7 @@ class Hash
      */
     public function __call($method, $parameters)
     {
-        $this->hasher->$method(...$parameters);
+        return $this->hasher->$method(...$parameters);
     }
 
     /**
@@ -79,13 +79,14 @@ class Hash
      * Accepts any type of variable. Non-scalar values will be serialized before hashing.
      *
      * @param mixed $data The data to hash
+     * @param mixed[] $options Additional hasher options
      * @return string
      **/
-    public function hash($data)
+    public function hash($data, array $options = [])
     {
         return $this->hasher->hash(
             self::getDataString($data),
-            $this->salt
+            $this->parseHashOptions($options)
         );
     }
 
@@ -96,12 +97,12 @@ class Hash
      * @param string $hash
      * @return bool
      */
-    public function verify($data, $hash)
+    public function verify($data, $hash, array $options = [])
     {
         return $this->hasher->verify(
             self::getDataString($data),
             $hash,
-            $this->salt
+            $this->parseHashOptions($options)
         );
     }
 
@@ -118,11 +119,12 @@ class Hash
      * @see Hash::hash()
      *
      * @param string $data
+     * @param mixed[] $options Additional hasher options
      * @return string
      */
-    public function shortHash($data)
+    public function shortHash($data, array $options = [])
     {
-        return substr($this->hash($data), 0, 7);
+        return substr($this->hash($data, $options), 0, 7);
     }
 
     /**
@@ -132,12 +134,13 @@ class Hash
      *
      * @param mixed $data
      * @param string $shortHash
+     * @param mixed[] $options Additional hasher options
      * @return bool
      **/
-    public function verifyShortHash($data, $shortHash)
+    public function verifyShortHash($data, $shortHash, array $options = [])
     {
         return self::compare(
-            $this->shortHash($data),
+            $this->shortHash($data, $options),
             $shortHash
         );
     }
@@ -193,5 +196,16 @@ class Hash
         }
 
         return serialize($data);
+    }
+
+    private function parseHashOptions(array $options = [])
+    {
+        $defaultOptions = [];
+
+        if (is_null($this->salt) === false) {
+            $defaultOptions['salt'] = $this->salt;
+        }
+
+        return array_merge($defaultOptions, $options);
     }
 }
