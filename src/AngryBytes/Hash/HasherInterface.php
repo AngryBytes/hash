@@ -11,9 +11,7 @@
 namespace AngryBytes\Hash;
 
 /**
- * HasherInterface
- *
- * Interface for hashers
+ * Common Contract For Hashers
  *
  * @category        AngryBytes
  * @package         Hash
@@ -24,21 +22,19 @@ interface HasherInterface
     /**
      * Hash a data string
      *
-     * Implementation is supposed to salt the hashing method using $salt
-     *
      * @param string $string
-     * @param string $salt
+     * @param array $options Additional hasher options
      * @return string
      **/
-    public function hash($string, $salt);
+    public function hash($string, array $options = []);
 
     /**
      * Verify is the data string matches the given hash
      *
      * @param string $string
      * @param string $hash
-     * @param string $salt
+     * @param array $options Additional hasher options
      * @return bool
      */
-    public function verify($string, $hash, $salt);
+    public function verify($string, $hash, array $options = []);
 }

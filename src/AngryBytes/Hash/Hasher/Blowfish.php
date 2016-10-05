@@ -17,10 +17,11 @@ use \RuntimeException;
 use \InvalidArgumentException;
 
 /**
- * Blowfish
+ * Blowfish Hasher
  *
- * Generate and verify Blowfish bcrypt/crypt() hashes using a salt
+ * Generate and verify Blowfish bcrypt/crypt() hashes.
  *
+ * @see AngryBytes\Hasher\Password For a password hasher
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
@@ -37,16 +38,23 @@ class Blowfish implements HasherInterface
     private $workFactor = 15;
 
     /**
+     * Construct
+     *
      * Detect Blowfish support
      *
-     * @throws RuntimeException
-     **/
-    public function __construct()
+     * @throws \RuntimeException
+     * @param null|int $workFactor Override workfactor
+     */
+    public function __construct($workFactor = null)
     {
         if (!defined("CRYPT_BLOWFISH") || CRYPT_BLOWFISH !== 1) {
             throw new RuntimeException(
                 'Blowfish hashing not available on this installation'
             );
+        }
+
+        if (is_int($workFactor)) {
+            $this->setWorkFactor($workFactor);
         }
     }
 
@@ -81,9 +89,11 @@ class Blowfish implements HasherInterface
     /**
      * {@inheritDoc}
      */
-    public function hash($string, $salt)
+    public function hash($string, array $options = [])
     {
-        return crypt($string, $this->bcryptSalt($salt));
+        $salt = isset($options['salt']) ? $this->bcryptSalt($options['salt']) : null;
+
+        return crypt($string, $salt);
     }
 
     /**
@@ -91,10 +101,10 @@ class Blowfish implements HasherInterface
      *
      * @see Hash::compare()
      */
-    public function verify($string, $hash, $salt)
+    public function verify($string, $hash, array $options = [])
     {
         return Hash::compare(
-            $this->hash($string, $salt),
+            $this->hash($string, $options),
             $hash
         );
     }
