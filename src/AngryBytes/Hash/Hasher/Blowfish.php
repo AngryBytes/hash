@@ -17,10 +17,11 @@ use \RuntimeException;
 use \InvalidArgumentException;
 
 /**
- * Blowfish
+ * Blowfish Hasher
  *
- * Generate and verify Blowfish bcrypt/crypt() hashes using a salt
+ * Generate and verify Blowfish bcrypt/crypt() hashes.
  *
+ * @see AngryBytes\Hasher\Password For a password hasher
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher

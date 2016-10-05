@@ -16,7 +16,7 @@ use \InvalidArgumentException;
 use \RuntimeException;
 
 /**
- * Password hasher
+ * Password Hasher Using Native PHP Hash Methods
  *
  * Generate and verify hashes using the `password_*` functions.
  * The hashing algorithm and salting is handled by these functions.
@@ -42,37 +42,13 @@ class Password implements HasherInterface
     private $cost;
 
     /**
-     * Get cost
+     * Password constructor.
      *
-     * @return int
+     * @param null|int $cost
      */
-    public function getCost()
+    public function __construct($cost = null)
     {
-        return $this->cost;
-    }
-
-    /**
-     * Set cost
-     *
-     * @throws InvalidArgumentException if the cost is too high or low
-     * @param int|null $cost
-     * @return $this
-     */
-    public function setCost($cost)
-    {
-        if (is_null($cost)) {
-            // Use default cost
-            return $this;
-        }
-
-        if ($cost < 4 || $cost > 31) {
-            throw new InvalidArgumentException(
-                'Cost needs to be greater than 3 and smaller than 32'
-            );
-        }
-        $this->cost = (int) $cost;
-
-        return $this;
+        $this->setCost($cost);
     }
 
     /**
@@ -94,9 +70,8 @@ class Password implements HasherInterface
         }
 
         $hash = password_hash($data, self::ALGORITHM, $options);
-
         if (!$hash) {
-            throw RuntimeException('Failed to hash password');
+            throw new RuntimeException('Failed to hash password');
         }
 
         return $hash;
@@ -115,7 +90,7 @@ class Password implements HasherInterface
     /**
      * Determine if the password needs to be rehashed based on the hash options
      *
-     * If true, rehashed the password after verifying it
+     * If true, the password should be rehashed after verification.
      *
      * @param string $hash
      * @param string|bool $salt (optional) When omitted `password_needs_rehash()` will generate it's own salt
@@ -125,11 +100,10 @@ class Password implements HasherInterface
     {
         // Set hash options
         $options = [];
-
         if (is_int($this->cost)) {
             $options['cost'] = $this->cost;
         }
-        if ($salt) {
+        if (is_string($salt)) {
             $options['salt'] = $salt;
         }
 
@@ -145,6 +119,29 @@ class Password implements HasherInterface
     public function getInfo($hash)
     {
         return password_get_info($hash);
+    }
+
+    /**
+     * Set cost
+     *
+     * @throws InvalidArgumentException if the cost is too high or low
+     * @param int|null $cost
+     */
+    public function setCost($cost)
+    {
+        if (is_null($cost)) {
+            $this->cost = $cost;
+
+            return;
+        }
+
+        if ($cost < 4 || $cost > 31) {
+            throw new InvalidArgumentException(sprintf(
+                'Cost value "%d" needs to be greater than 3 and smaller than 32', (int) $cost
+            ));
+        }
+
+        $this->cost = (int) $cost;
     }
 }
 

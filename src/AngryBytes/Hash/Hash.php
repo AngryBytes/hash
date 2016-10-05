@@ -12,9 +12,13 @@ namespace AngryBytes\Hash;
 use \InvalidArgumentException;
 
 /**
- * Hash
- *
  * A collection of hash generation and comparison methods.
+ *
+ * This Hash library must receive a \AngryBytes\HasherInterface compatible
+ * instance to work with.
+ *
+ * Providing a salt is strictly optional, and should not be provided when the
+ * hasher provides better salt generation methods.
  *
  * @category    AngryBytes
  * @package     Hash
@@ -24,7 +28,7 @@ class Hash
     /**
      * Salt for hashing
      *
-     * @var string|bool
+     * @var string|null
      **/
     private $salt;
 
@@ -39,13 +43,24 @@ class Hash
      * Constructor
      *
      * @param  HasherInterface $hasher The hasher to be used
-     * @param  string|bool     $salt (optional) Omit if the hasher creates its own salt
+     * @param  string|bool     $salt (optional) Omit if the hasher creates its own (better) salt
      **/
-    public function __construct(HasherInterface $hasher, $salt = false)
+    public function __construct(HasherInterface $hasher, $salt = null)
     {
-        $this
-            ->setHasher($hasher)
-            ->setSalt($salt);
+        $this->hasher = $hasher;
+
+        $this->setSalt($salt);
+    }
+
+    /**
+     * Dynamically pass methods to the active hasher
+     *
+     * @param string $method
+     * @param array $parameters
+     */
+    public function __call($method, $parameters)
+    {
+        $this->hasher->$method(...$parameters);
     }
 
     /**
@@ -59,52 +74,6 @@ class Hash
     }
 
     /**
-     * Set the hasher to use for the actual hashing
-     *
-     * @param  HasherInterface $hasher
-     * @return Hash
-     */
-    public function setHasher(HasherInterface $hasher)
-    {
-        $this->hasher = $hasher;
-
-        return $this;
-    }
-
-    /**
-     * Get the salt
-     *
-     * @return string|bool
-     */
-    public function getSalt()
-    {
-        return $this->salt;
-    }
-
-    /**
-     * Set the salt
-     *
-     * @param  string|bool $salt
-     * @return Hash
-     */
-    public function setSalt($salt)
-    {
-        if ($salt) {
-            // Make sure it's of sufficient length
-            if (strlen($salt) < 20) {
-                throw new InvalidArgumentException(sprintf(
-                    'Provided salt "%s" is not long enough. A minimum length of 20 characters is required',
-                    $salt
-                ));
-            }
-        }
-
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    /**
      * Generate a hash
      *
      * Accepts any type of variable. Non-scalar values will be serialized before hashing.
@@ -114,9 +83,9 @@ class Hash
      **/
     public function hash($data)
     {
-        return $this->getHasher()->hash(
+        return $this->hasher->hash(
             $this->getDataString($data),
-            $this->getSalt()
+            $this->salt
         );
     }
 
@@ -129,10 +98,10 @@ class Hash
      */
     public function verify($data, $hash)
     {
-        return $this->getHasher()->verify(
+        return $this->hasher->verify(
             $this->getDataString($data),
             $hash,
-            $this->getSalt()
+            $this->salt
         );
     }
 
@@ -148,8 +117,9 @@ class Hash
      *
      * @see Hash::hash()
      *
+     * @param string $data
      * @return string
-     **/
+     */
     public function shortHash($data)
     {
         return substr($this->hash($data), 0, 7);
@@ -187,12 +157,34 @@ class Hash
     }
 
     /**
+     * Set the salt
+     *
+     * @param  string|null $salt
+     * @return Hash
+     */
+    protected function setSalt($salt)
+    {
+        if (is_string($salt) && strlen($salt) < 20) {
+            // Make sure it's of sufficient length
+            throw new InvalidArgumentException(sprintf(
+                'Provided salt "%s" is not long enough. A minimum length of 20 characters is required.',
+                $salt
+            ));
+        }
+
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
      * Get the data as a string
      *
      * Will serialize non-scalar values
      *
+     * @param mixed $data
      * @return string
-     **/
+     */
     private function getDataString($data)
     {
         if (is_scalar($data)) {

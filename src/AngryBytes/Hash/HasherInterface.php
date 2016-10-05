@@ -11,9 +11,7 @@
 namespace AngryBytes\Hash;
 
 /**
- * HasherInterface
- *
- * Interface for hashers
+ * Common Contract For Hashers
  *
  * @category        AngryBytes
  * @package         Hash

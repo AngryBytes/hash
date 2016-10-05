@@ -14,14 +14,16 @@ use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\HasherInterface;
 
 /**
- * MD5
+ * MD5 Hasher
  *
- * Generate and verify MD5 hashes using a salt
+ * Generate and verify MD5 hashes.
  *
  * NOTE:
  *
  * This hasher MUST NOT be used for password storage. It is RECOMMENDED
  * to use the Hasher\Password for this purpose
+ *
+ * @see AngryBytes\Hasher\Password For a password hasher
  *
  * @category        AngryBytes
  * @package         Hash
