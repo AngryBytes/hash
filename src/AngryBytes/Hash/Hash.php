@@ -166,7 +166,7 @@ class Hash
      */
     protected function setSalt($salt)
     {
-        if (is_string($salt) && strlen($salt) < 20 && strlen($salt) > CRYPT_SALT_LENGTH) {
+        if (is_string($salt) && (strlen($salt) < 20 || strlen($salt) > CRYPT_SALT_LENGTH)) {
             // Make sure it's of sufficient length
             throw new InvalidArgumentException(sprintf(
                 'Provided salt "%s" does not match the length requirements. A length between 20 en %d characters is required.',
