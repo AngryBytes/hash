@@ -20,7 +20,7 @@ use AngryBytes\Hash\Hasher\MD5 as MD5Hasher;
  * @package         Hash
  * @subpackage      Test
  */
-class MD5Test extends TestCase
+class MD5Test extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test hashing of strings

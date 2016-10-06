@@ -14,13 +14,13 @@ use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\Hasher\Blowfish as BlowfishHasher;
 
 /**
- * Test the blowfish haser
+ * Test the blowfish hasher
  *
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Test
  */
-class BlowfishTest extends TestCase
+class BlowfishTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test simple string hashing

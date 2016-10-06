@@ -10,8 +10,6 @@
 
 namespace AngryBytes\Hash\Test;
 
-use \PHPUnit_Framework_TestCase as PUTestCase;
-
 /**
  * Hashing test case
  *
@@ -19,7 +17,6 @@ use \PHPUnit_Framework_TestCase as PUTestCase;
  * @package         Hash
  * @subpackage      Test
  */
-abstract class TestCase extends PUTestCase
+abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
-
 }
