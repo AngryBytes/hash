@@ -76,10 +76,8 @@ class Hash
     /**
      * Generate a hash
      *
-     * Accepts any type of variable. Non-scalar values will be serialized before hashing.
-     *
      * @param mixed $data The data to hash. This can either be a scalar value or a serializable value.
-     * @param mixed[] $options Additional hasher options
+     * @param mixed[] $options Additional hasher options (the actual options depend on the registered Hasher)
      * @return string
      **/
     public function hash($data, array $options = [])
