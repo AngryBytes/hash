@@ -4,95 +4,71 @@ This document lists important upgrade nodes and BC breaks per version.
 
 ## 2.0.0
 
-### Update hashing
+### Update Hashing Values
 
-If you are hashing multiple values you will need to change the way their are passed to the hasher. Instead of passing
-each variable separately you will need to pass them as an array. Like so:
+If you are hashing multiple values you will need to change the way their are passed
+to the hasher. Instead of passing each variable separately you will need to pass
+them as an array. Like so:
 
 ```php
 
-use AngryBytes\Hash\Hasher\Password;
-use AngryBytes\Hash\Hash;
-
-// Create a hasher
-$hasher = new Hash(
-    new Password()
+// Create a new Password Hasher
+$hasher = new \AngryBytes\Hash\Hash(
+  new \AngryBytes\Hash\Hasher\Password
 );
 
-/** Old way */
+// Old
+$hash = $hasher->hash('foo', 'bar', ['foo', 'bar']);
 
-$hash = $hasher->hash($foo, $bar, $foobar);
-
-/** New way */
-
+// New
 $hash = $hasher->hash([
-    $foo,
-    $bar,
-    $foobar
+  'foo', 'bar', ['foo', 'bar']
 ]);
-
-/** Old way */
-
-$hash = $hasher->shortHash($foo, $bar, $foobar);
-
-/** New way */
-
-$hash = $hasher->shortHash([
-    $foo,
-    $bar,
-    $foobar
-]);
-
 ```
 
-### Update hash validation
+The same principle applies to `Hash::shortHash()`.
 
-In the previous version hash validation would be done by creating a hash and comparing it to the existing hash.
-Now you can simple pass the value(s) to hash and the existing hash to a method, `verify()` or `verfiyShortHash()`.
+### Update Hash Validation
+
+In the previous version hash validation would be done by creating a hash and comparing
+it to the existing hash. Now, you can simple pass the value(s) to hash and the
+existing hash to methods: `verify()` or `verfiyShortHash()`.
 
 ```php
-
-use AngryBytes\Hash\Hasher\Password;
-use AngryBytes\Hash\Hash;
-
-// Create a hasher
-$hasher = new Hash(
-    new Password()
+// Create a new Password Hasher
+$hasher = new \AngryBytes\Hash\Hash(
+  new \AngryBytes\Hash\Hasher\Password
 );
 
 // The origin and hashed values
-$value = '...'
+$valueToHash = '...'
 $existingHash = '...';
 
-/** Old way */
+// Old
+$isValid = \AngryBytes\Hash\Hash::compare(
+  $hasher->hash($valueToHash),
+  $existingHash
+);
 
-// Create a hash
-$hash = $hasher->hash($value);
+// New
+$isValid = $hasher->verify($valueToHash, $existingHash)
+```
 
-// Validate hash
-if (Hash::compare($hash, $existingHash)) {
+And for short hash comparison:
+
+```php
+// Create a new Password Hasher
+$hasher = new \AngryBytes\Hash\Hash(
+  new \AngryBytes\Hash\Hasher\Password
+);
+
+// Old
+if (Hash::matchShortHash($hasher->shortHash($value), $existingShortHash)) {
     // Hash is valid
 }
 
-/** New way */
-
-if ($hasher->verify($value, $existingHash)) {
+// New
+if ($hasher->verifyShortHash($value, $existingShortHash)) {
     // Hash is valid
 }
-
-
-/** Old way */
-
-$hash = $hasher->shortHash($value);
-
-if (Hash::matchShortHash($hash, $existingHash)) {
-    // Hash is valid
-}
-
-/** New way */
-
-if ($hasher->verifyShortHash($value, $existingHash)) {
-    // Hash is valid
-}
-
 ```
