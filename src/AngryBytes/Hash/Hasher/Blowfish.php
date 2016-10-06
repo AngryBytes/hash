@@ -5,28 +5,26 @@
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
- * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
+ * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
  */
 
 namespace AngryBytes\Hash\Hasher;
 
+use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\HasherInterface;
 
 use \RuntimeException;
 use \InvalidArgumentException;
 
 /**
- * Blowfish
+ * Blowfish Hasher
  *
- * Blowfish hasher
+ * Generate and verify Blowfish bcrypt/crypt() hashes.
  *
- * Relies on bcrypt/crypt() for the heavy lifting
- *
+ * @see AngryBytes\Hasher\Password For a password hasher
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
- *
- * @hootie
  */
 class Blowfish implements HasherInterface
 {
@@ -40,16 +38,23 @@ class Blowfish implements HasherInterface
     private $workFactor = 15;
 
     /**
+     * Construct
+     *
      * Detect Blowfish support
      *
-     * @throws RuntimeException
-     **/
-    public function __construct()
+     * @throws \RuntimeException
+     * @param null|int $workFactor Override workfactor
+     */
+    public function __construct($workFactor = null)
     {
         if (!defined("CRYPT_BLOWFISH") || CRYPT_BLOWFISH !== 1) {
             throw new RuntimeException(
                 'Blowfish hashing not available on this installation'
             );
+        }
+
+        if (is_int($workFactor)) {
+            $this->setWorkFactor($workFactor);
         }
     }
 
@@ -82,15 +87,26 @@ class Blowfish implements HasherInterface
     }
 
     /**
-     * Hash password and salt
-     *
-     * @param  string $data
-     * @param  string $salt
-     * @return string
-     **/
-    public function hash($data, $salt)
+     * {@inheritDoc}
+     */
+    public function hash($string, array $options = [])
     {
-        return crypt($data, $this->bcryptSalt($salt));
+        $salt = isset($options['salt']) ? $this->bcryptSalt($options['salt']) : null;
+
+        return crypt($string, $salt);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Hash::compare()
+     */
+    public function verify($string, $hash, array $options = [])
+    {
+        return Hash::compare(
+            $this->hash($string, $options),
+            $hash
+        );
     }
 
     /**
@@ -134,4 +150,3 @@ class Blowfish implements HasherInterface
         );
     }
 }
-

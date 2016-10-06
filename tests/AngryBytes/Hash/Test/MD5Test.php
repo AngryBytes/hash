@@ -5,26 +5,22 @@
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Test
- * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
+ * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
  */
 
 namespace AngryBytes\Hash\Test;
-
-use AngryBytes\Hash\Test\TestCase;
 
 use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\Hasher\MD5 as MD5Hasher;
 
 /**
- * MD5Test
- *
- * Testing md5 hasher
+ * Test the md5 hasher
  *
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Test
  */
-class MD5Test extends TestCase
+class MD5Test extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test hashing of strings
@@ -36,12 +32,12 @@ class MD5Test extends TestCase
         $hasher = $this->createHasher();
 
         $this->assertEquals(
-            '4dc664001bbbbf88d2b59eeda6855a6b',
+            'f149d11c9f6d8e899772b855588722f2',
             $hasher->hash('foo')
         );
 
         $this->assertEquals(
-            'b5ab8f853032ce68de22035736209e75',
+            '7b84dc4faca7b93ea519eade24a5f634',
             $hasher->hash('bar')
         );
     }
@@ -59,15 +55,52 @@ class MD5Test extends TestCase
         $obj->foo = 'bar';
 
         $this->assertEquals(
-            '8ff1610fc9c2607f7d8e9175080f7311',
+            '2f4162ad4b8774272e452efafd25972f',
             $hasher->hash($obj)
         );
 
         $obj->bar = 'foo';
 
         $this->assertEquals(
-            '458ee16d8b79287fb8cf8700469cc634',
+            '0d8c867eedd83575b44c62f8caac142b',
             $hasher->hash($obj)
+        );
+    }
+
+    /**
+     * Test verification of string hashes
+     */
+    public function testVerifyString()
+    {
+        $hasher = $this->createHasher();
+
+        $this->assertTrue(
+            $hasher->verify('foo', 'f149d11c9f6d8e899772b855588722f2')
+        );
+
+        $this->assertFalse(
+            $hasher->verify('bar', 'f149d11c9f6d8e899772b855588722f2')
+        );
+    }
+
+    /**
+     * Test verification of object hashes
+     */
+    public function testVerifyHashObject()
+    {
+        $hasher = $this->createHasher();
+
+        $obj = new \stdClass;
+        $obj->foo = 'bar';
+
+        $this->assertTrue(
+            $hasher->verify($obj, '2f4162ad4b8774272e452efafd25972f')
+        );
+
+        $obj->bar = 'foo';
+
+        $this->assertFalse(
+            $hasher->verify($obj, '2f4162ad4b8774272e452efafd25972f')
         );
     }
 

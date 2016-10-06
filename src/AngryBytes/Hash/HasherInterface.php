@@ -5,15 +5,13 @@
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Hasher
- * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
+ * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
  */
 
 namespace AngryBytes\Hash;
 
 /**
- * HasherInterface
- *
- * Interface for hashers
+ * Common Contract For Hashers
  *
  * @category        AngryBytes
  * @package         Hash
@@ -24,11 +22,19 @@ interface HasherInterface
     /**
      * Hash a data string
      *
-     * Implementation is supposed to salt the hashing method using $salt
-     *
-     * @param string $data
-     * @param string $salt
+     * @param string $string
+     * @param array $options Additional hasher options
      * @return string
      **/
-    public function hash($data, $salt);
+    public function hash($string, array $options = []);
+
+    /**
+     * Verify is the data string matches the given hash
+     *
+     * @param string $string
+     * @param string $hash
+     * @param array $options Additional hasher options
+     * @return bool
+     */
+    public function verify($string, $hash, array $options = []);
 }

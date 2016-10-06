@@ -1,25 +1,24 @@
 <?php
 /**
- * Security
+ * Hash.php
  *
  * @category    AngryBytes
  * @package     Hash
- * @copyright   Copyright (c) 2007-2012 Angry Bytes BV (http://www.angrybytes.com)
+ * @copyright   Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
  */
 
 namespace AngryBytes\Hash;
 
-use AngryBytes\Hash\HasherInterface;
-
 use \InvalidArgumentException;
 
 /**
- * Hash
+ * A collection of hash generation and comparison methods.
  *
- * Hash generation and comparison methods.
+ * This Hash library must receive a \AngryBytes\HasherInterface compatible
+ * instance to work with.
  *
- * This hasher accepts a "salt" string that it uses for salting the hash
- * function.
+ * Providing a salt is strictly optional, and should not be provided when the
+ * hasher provides better salt generation methods.
  *
  * @category    AngryBytes
  * @package     Hash
@@ -29,7 +28,7 @@ class Hash
     /**
      * Salt for hashing
      *
-     * @var string
+     * @var string|null
      **/
     private $salt;
 
@@ -43,14 +42,25 @@ class Hash
     /**
      * Constructor
      *
-     * @param  HasherInterface $hasher
-     * @param  string          $salt
+     * @param  HasherInterface $hasher The hasher to be used
+     * @param  string|bool     $salt (optional) Omit if the hasher creates its own (better) salt
      **/
-    public function __construct(HasherInterface $hasher, $salt)
+    public function __construct(HasherInterface $hasher, $salt = null)
     {
-        $this
-            ->setHasher($hasher)
-            ->setSalt($salt);
+        $this->hasher = $hasher;
+
+        $this->setSalt($salt);
+    }
+
+    /**
+     * Dynamically pass methods to the active hasher
+     *
+     * @param string $method
+     * @param array $parameters
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->hasher->$method(...$parameters);
     }
 
     /**
@@ -64,41 +74,104 @@ class Hash
     }
 
     /**
-     * Set the hasher to use for the actual hashing
+     * Generate a hash
      *
-     * @param  HasherInterface $hasher
-     * @return Hash
-     */
-    public function setHasher(HasherInterface $hasher)
+     * @param mixed $data The data to hash. This can either be a scalar value or a serializable value.
+     * @param mixed[] $options Additional hasher options (the actual options depend on the registered Hasher)
+     * @return string
+     **/
+    public function hash($data, array $options = [])
     {
-        $this->hasher = $hasher;
-
-        return $this;
+        return $this->hasher->hash(
+            self::getDataString($data),
+            $this->parseHashOptions($options)
+        );
     }
 
     /**
-     * Get the salt
+     * Verify if the data matches the hash
      *
+     * @param mixed $data The data to verify against the hash string. This can either be a scalar value or a serializable value.
+     * @param string $hash
+     * @param mixed[] $options
+     * @return bool
+     */
+    public function verify($data, $hash, array $options = [])
+    {
+        return $this->hasher->verify(
+            self::getDataString($data),
+            $hash,
+            $this->parseHashOptions($options)
+        );
+    }
+
+    /**
+     * Hash something into a short hash
+     *
+     * This is simply a shortened version of hash(), returning a 7 character hash, which should be good
+     * enough for identification purposes. Therefore it MUST NOT be used for cryptographic purposes or
+     * password storage but only to create a fast, short string to compare or identify.
+     *
+     * It is RECOMMENDED to only use this method with the Hasher\MD5 hasher as hashes
+     * created by bcrypt/crypt() have a common beginning.
+     *
+     * @see Hash::hash()
+     *
+     * @param string $data
+     * @param mixed[] $options
      * @return string
      */
-    public function getSalt()
+    public function shortHash($data, array $options = [])
     {
-        return $this->salt;
+        return substr($this->hash($data, $options), 0, 7);
+    }
+
+    /**
+     * Verify if the data matches the shortHash
+     *
+     * @see Hash::shortHash()
+     *
+     * @param mixed $data
+     * @param string $shortHash
+     * @param mixed[] $options
+     * @return bool
+     **/
+    public function verifyShortHash($data, $shortHash, array $options = [])
+    {
+        return self::compare(
+            $this->shortHash($data, $options),
+            $shortHash
+        );
+    }
+
+    /**
+     * Compare two hashes
+     *
+     * Uses the time-save `hash_equals()` function to compare 2 hashes.
+     *
+     * @param  string $hashA
+     * @param  string $hashB
+     * @return bool
+     **/
+    public static function compare($hashA, $hashB)
+    {
+        return hash_equals($hashA, $hashB);
     }
 
     /**
      * Set the salt
      *
-     * @param  string $salt
+     * @param  string|null $salt
      * @return Hash
      */
-    public function setSalt($salt)
+    protected function setSalt($salt)
     {
-        // Make sure it's of sufficient length
-        if (strlen($salt) < 20) {
+        if (is_string($salt) && (strlen($salt) < 20 || strlen($salt) > CRYPT_SALT_LENGTH)) {
+            // Make sure it's of sufficient length
             throw new InvalidArgumentException(sprintf(
-                'Provided salt "%s" is not long enough. A minimum length of 20 characters is required',
-                $salt
+                'Provided salt "%s" does not match the length requirements. A length between 20 en %d characters is required.',
+                $salt,
+                CRYPT_SALT_LENGTH
             ));
         }
 
@@ -108,131 +181,40 @@ class Hash
     }
 
     /**
-     * Generate a hash
+     * Get the data as a string
      *
-     * Will accept any number of (serializable) variables
+     * Will serialize non-scalar values
      *
-     * @param mixed $what1
-     * @param mixed $what2
-     * ...
-     * @param  mixed  $whatN
+     * @param mixed $data
      * @return string
-     **/
-    public function hash()
+     */
+    private static function getDataString($data)
     {
-        return $this->getHasher()->hash(
-            call_user_func_array(
-                array($this, 'getDataString'),
-                func_get_args()
-            ),
-            $this->getSalt()
-        );
-    }
-
-    /**
-     * Hash something into a short hash
-     *
-     * This is simply a shortened version of hash(), returning a 7 character
-     * hash, which should be good enough for identification purposes. It is
-     * however *not* strong enough for cryptographical uses or password
-     * storage. Use only to create a fast, short string to compare or identify.
-     *
-     * @see Hash::hash()
-     *
-     * @param mixed $what1
-     * @param mixed $what2
-     * ...
-     * @param  mixed  $whatN
-     * @return string
-     **/
-    public function shortHash()
-    {
-        $fullHash = call_user_func_array(
-            array($this, 'hash'),
-            func_get_args()
-        );
-
-        return substr($fullHash, 0, 7);
-    }
-
-    /**
-     * Does something match a short hash?
-     *
-     * First argument to this function is the short hash as it *should* be, all other arguments will
-     * be passed to shortHash()
-     *
-     * @see Hash::shortHash()
-     *
-     * @param  mixed  $what
-     * @param  string $hash
-     * @return bool
-     **/
-    public function matchesShortHash()
-    {
-        // Full args to method
-        $args = func_get_args();
-
-        // Remove compareTo from the beginning
-        $compareTo = array_shift($args);
-
-        // Create short hash to compare to
-        $shortHash = call_user_func_array(
-            array($this, 'shortHash'),
-            $args
-        );
-
-        // Compare and return
-        return self::compare($compareTo, $shortHash);
-    }
-
-    /**
-     * Compare two hashes
-     *
-     * This method is time-safe, i.e. it will take the same amount of time to
-     * execute for all inputs. This is critical to avoid timing attacks.
-     *
-     * NOTE:
-     *
-     * **This method only works on ASCII strings.**
-     *
-     * @param  string $hashA
-     * @param  string $hashB
-     * @return bool
-     **/
-    public static function compare($hashA, $hashB)
-    {
-        // Compare length
-        if (strlen($hashA) !== strlen($hashB)) {
-            return false;
+        if (is_scalar($data)) {
+            return (string) $data;
         }
 
-        // bitwise OR total for all characters
-        $result = 0;
-
-        for ($charIndex = 0; $charIndex < strlen($hashA); $charIndex++) {
-            // XOR the value of the ASCII characters at $charIndex
-            // This value is then OR-ed into the total
-            $result |= ord($hashA[$charIndex]) ^ ord($hashB[$charIndex]);
-        }
-
-        // If the result is anything but 0 there was a differing character at
-        // one or more of the positions
-        return $result === 0;
+        return serialize($data);
     }
 
     /**
-     * Get the passed arguments as a string
+     * Merge the default and provided hash options
      *
-     * Accepts anything serializable
+     * Automatically sets the salt as an option when set in this
+     * component.
      *
-     * @param mixed $what1
-     * @param mixed $what2
-     * ...
-     * @param  mixed  $whatN
-     * @return string
-     **/
-    private function getDataString()
+     * @param mixed[] $options
+     * @return mixed[]
+     */
+    private function parseHashOptions(array $options = [])
     {
-        return serialize(func_get_args());
+        $defaultOptions = [];
+
+        // Pass the salt if set
+        if (!is_null($this->salt)) {
+            $defaultOptions['salt'] = $this->salt;
+        }
+
+        return array_merge($defaultOptions, $options);
     }
 }

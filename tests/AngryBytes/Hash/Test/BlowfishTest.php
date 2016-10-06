@@ -5,29 +5,25 @@
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Test
- * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
+ * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
  */
 
 namespace AngryBytes\Hash\Test;
-
-use AngryBytes\Hash\Test\TestCase;
 
 use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\Hasher\Blowfish as BlowfishHasher;
 
 /**
- * BlowfishTest
- *
- * Testing file adapter
+ * Test the blowfish hasher
  *
  * @category        AngryBytes
  * @package         Hash
  * @subpackage      Test
  */
-class BlowfishTest extends TestCase
+class BlowfishTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test hashing of blowfish
+     * Test simple string hashing
      *
      * @return void
      **/
@@ -37,17 +33,17 @@ class BlowfishTest extends TestCase
 
         // Simple string
         $this->assertEquals(
-            '$2y$15$aa5c57dda7634fc90a92duWE0jEXBsxhrZrjtIDNJxqSVAgleehYW',
+            '$2y$15$aa5c57dda7634fc90a92duQSfz3E1u39Z6s63i6l5QpvgJK5tSKri',
             $hasher->hash('foo')
         );
         $this->assertNotEquals(
-            '$2y$15$aa5c57dda7634fc90a92duWE0jEXBsxhrZrjtIDNJxqSVAgleehYW',
+            '$2y$15$aa5c57dda7634fc90a92duQSfz3E1u39Z6s63i6l5QpvgJK5tSKri',
             $hasher->hash('bar')
         );
     }
 
     /**
-     * Test complex serialized data
+     * Test complex serialized data hashing
      *
      * @return void
      **/
@@ -62,7 +58,7 @@ class BlowfishTest extends TestCase
             12345
         );
         $this->assertEquals(
-            '$2y$15$aa5c57dda7634fc90a92duEeKPUIy2mlag3NxVWnd1S.pWl0l6Vkq',
+            '$2y$15$aa5c57dda7634fc90a92duDv2OoNSn8R.p3.GSoaEZd6/vdiiq9lG',
             $hasher->hash($data)
         );
 
@@ -71,8 +67,50 @@ class BlowfishTest extends TestCase
 
         // Should no longer match
         $this->assertNotEquals(
-            '$2y$15$aa5c57dda7634fc90a92duEeKPUIy2mlag3NxVWnd1S.pWl0l6Vkq',
+            '$2y$15$aa5c57dda7634fc90a92duDv2OoNSn8R.p3.GSoaEZd6/vdiiq9lG',
             $hasher->hash($data)
+        );
+    }
+
+    /**
+     * Test verification of string hashes
+     */
+    public function testStringVerify()
+    {
+        $hasher = $this->createHasher();
+
+        $this->assertTrue(
+            $hasher->verify('foo', '$2y$15$aa5c57dda7634fc90a92duQSfz3E1u39Z6s63i6l5QpvgJK5tSKri')
+        );
+
+        $this->assertFalse(
+            $hasher->verify('bar', '$2y$15$aa5c57dda7634fc90a92duQSfz3E1u39Z6s63i6l5QpvgJK5tSKri')
+        );
+    }
+
+    /**
+     * Test verification of object hashes
+     */
+    public function testObjectVerify()
+    {
+        $hasher = $this->createHasher();
+
+        // Complex data
+        $data = array(
+            new \stdClass,
+            array('foo', 'bar'),
+            12345
+        );
+
+        $this->assertTrue(
+            $hasher->verify($data, '$2y$15$aa5c57dda7634fc90a92duDv2OoNSn8R.p3.GSoaEZd6/vdiiq9lG')
+        );
+
+        // Append to data
+        $data[] = 'foo';
+
+        $this->assertFalse(
+            $hasher->verify($data, '$2y$15$aa5c57dda7634fc90a92duDv2OoNSn8R.p3.GSoaEZd6/vdiiq9lG')
         );
     }
 
@@ -103,7 +141,7 @@ class BlowfishTest extends TestCase
     }
 
     /**
-     * Test hashing of blowfish
+     * Test work factor alteration
      *
      * @return void
      **/
@@ -115,13 +153,13 @@ class BlowfishTest extends TestCase
 
         // Simple string
         $this->assertEquals(
-            '$2y$05$aa5c57dda7634fc90a92duqnvmZIAm8fd3YauHfd2Lyt.5Rlz6BsC',
+            '$2y$05$aa5c57dda7634fc90a92duCIqZ6agXYH9mOnF/It6sfh3MAJAkKXe',
             $hasher->hash('foo')
         );
 
         $hasher->getHasher()->setWorkFactor(10);
         $this->assertEquals(
-            '$2y$10$aa5c57dda7634fc90a92duaIgY20lEZW.nomcy7J7xN3jNAn5pvge',
+            '$2y$10$aa5c57dda7634fc90a92duoe.XRVTsrN1oW9P.qnaa.W0BGQ9olPy',
             $hasher->hash('foo')
         );
     }
@@ -138,14 +176,20 @@ class BlowfishTest extends TestCase
         $this->assertEquals(
             // Pre-generated hash outcome for password 'foo' and given salt
             '$2y$05$./A1aaaaaaaaaaaaaaaaaOZW9OJaO6Alj4.ZDbOi6Jrbn.bGZfYRK',
-            $hasher->getHasher()->hash('foo', './A1aaaaaaaaaaaaaaaaaa')
+            $hasher->getHasher()->hash(
+                'foo',
+                ['salt' => './A1aaaaaaaaaaaaaaaaaa']
+            )
         );
 
         // Test salt with less invalid characters
         $this->assertEquals(
             // Pre-generated hash outcome for password 'foo' and given salt (md5'ed)
             '$2y$05$ceb20772e0c9d240c75ebugm2AOmnuR5.LsdpDZGAjkE1DupDTPFW',
-            $hasher->getHasher()->hash('foo', 'salt')
+            $hasher->getHasher()->hash(
+                'foo',
+                ['salt' => 'salt']
+            )
         );
     }
 
