@@ -20,7 +20,7 @@ use AngryBytes\Hash\Hasher\Password as PasswordHasher;
  * @package         Hash
  * @subpackage      Test
  */
-class PasswordTest extends TestCase
+class PasswordTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test password hash creation
