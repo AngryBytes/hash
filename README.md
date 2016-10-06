@@ -16,19 +16,28 @@ object oriented interface to a variety of hashing methods.
 
 Installation is done via Composer: `composer require angrybytes/hash`.
 
-## Contents
+## Components
 
 ### Hash
 
-`AngryBytes\Hash\Hash` is the main hasher class. It uses one of the `Hashers` to do the work.
+`AngryBytes\Hash\Hash` is the main hasher class and acts as a helper wrapper
+around hashers (i.e. `AngryBytes\Hash\HasherInterface` implementations).
 
-Available hashers are:
+Some of the main features of this component:
+
+* Hash strings and/or passwords.
+* Create short hashes (e.g. used for identification).
+* Compare strings/hashes using a time-safe method.
+* Verify a string against a hash using the configured hasher.
+
+### Hashers
+
+This library comes with a set of hashers to be utilised by this hash component (or
+to be used on their own):
 
  * `AngryBytes\Hash\Hasher\BlowFish`
  * `AngryBytes\Hash\Hasher\MD5`
  * `AngryBytes\Hash\Hasher\Password`
-
-In addition this class can compare strings/hashes using a time-safe method.
 
 ### HMAC
 
