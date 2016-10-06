@@ -78,7 +78,7 @@ class Hash
      *
      * Accepts any type of variable. Non-scalar values will be serialized before hashing.
      *
-     * @param mixed $data The data to hash
+     * @param mixed $data The data to hash. This can either be a scalar value or a serializable value.
      * @param mixed[] $options Additional hasher options
      * @return string
      **/
@@ -93,7 +93,7 @@ class Hash
     /**
      * Verify if the data matches the hash
      *
-     * @param mixed $data
+     * @param mixed $data The data to verify against the hash string. This can either be a scalar value or a serializable value.
      * @param string $hash
      * @param mixed[] $options
      * @return bool
@@ -202,6 +202,9 @@ class Hash
     /**
      * Merge the default and provided hash options
      *
+     * Automatically sets the salt as an option when set in this
+     * component.
+     *
      * @param mixed[] $options
      * @return mixed[]
      */
@@ -210,7 +213,7 @@ class Hash
         $defaultOptions = [];
 
         // Pass the salt if set
-        if (is_null($this->salt) === false) {
+        if (!is_null($this->salt)) {
             $defaultOptions['salt'] = $this->salt;
         }
 
