@@ -14,12 +14,6 @@
             "role": "developer"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/AngryBytes/hash.git"
-        }
-    ],
     "minimum-stability": "stable",
     "license": "MIT",
     "autoload": {
