@@ -19,7 +19,7 @@ use AngryBytes\Hash\Hash;
  * @package         Hash
  * @subpackage      Test
  */
-class HashLibTest extends \PHPUnit_Framework_TestCase
+class HashLibTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test new hasher with valid salt
@@ -37,11 +37,11 @@ class HashLibTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test new hasher with salt set too short
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testSaltTooShort()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new Hash(
             new \AngryBytes\Hash\Hasher\MD5,
             str_repeat('a', 19)
@@ -50,11 +50,11 @@ class HashLibTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test new hasher with salt set too long
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testSaltTooLong()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new Hash(
             new \AngryBytes\Hash\Hasher\MD5,
             str_repeat('a', CRYPT_SALT_LENGTH + 1)

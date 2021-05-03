@@ -20,12 +20,10 @@ use AngryBytes\Hash\Hasher\MD5 as MD5Hasher;
  * @package         Hash
  * @subpackage      Test
  */
-class MD5Test extends \PHPUnit_Framework_TestCase
+class MD5Test extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test hashing of strings
-     *
-     * @return void
      **/
     public function testHashString()
     {
@@ -44,8 +42,6 @@ class MD5Test extends \PHPUnit_Framework_TestCase
 
     /**
      * Test hashing of complex data
-     *
-     * @return void
      **/
     public function testHashObject()
     {

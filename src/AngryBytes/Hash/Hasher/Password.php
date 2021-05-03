@@ -30,7 +30,7 @@ class Password implements HasherInterface
     /**
      * Cost factor for the algorithm
      *
-     * @var int
+     * @var ?int
      */
     private $cost;
 
@@ -76,8 +76,8 @@ class Password implements HasherInterface
      *
      * If true, the password should be rehashed after verification.
      *
-     * @param string $hash
-     * @param array $options Password options, @see hash()
+     * @param  string  $hash
+     * @param  mixed[] $options Password options, @see hash()
      * @return bool
      */
     public function needsRehash($hash, array $options = [])
@@ -89,7 +89,8 @@ class Password implements HasherInterface
      * Get info for the given hash
      *
      * @see password_get_info()
-     * @param string $hash
+     *
+     * @param  string $hash
      * @return mixed[]
      */
     public function getInfo($hash)
@@ -100,10 +101,11 @@ class Password implements HasherInterface
     /**
      * Set cost
      *
+     * @param  ?int $cost
+     * @return void
      * @throws InvalidArgumentException if the cost is too high or low
-     * @param int|null $cost
      */
-    public function setCost($cost)
+    public function setCost($cost = null)
     {
         if (is_null($cost)) {
             $this->cost = $cost;
@@ -113,7 +115,8 @@ class Password implements HasherInterface
 
         if ($cost < 4 || $cost > 31) {
             throw new InvalidArgumentException(sprintf(
-                'Cost value "%d" needs to be greater than 3 and smaller than 32', (int) $cost
+                'Cost value "%d" needs to be greater than 3 and smaller than 32',
+                (int) $cost
             ));
         }
 
@@ -123,8 +126,8 @@ class Password implements HasherInterface
     /**
      * Parse password options for hash methods
      *
-     * @param array $options
-     * @return array
+     * @param  mixed[] $options
+     * @return mixed[]
      */
     private function parsePasswordOptions(array $options)
     {

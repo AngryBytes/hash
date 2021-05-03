@@ -43,7 +43,7 @@ class Hash
      * Constructor
      *
      * @param  HasherInterface $hasher The hasher to be used
-     * @param  string|bool     $salt (optional) Omit if the hasher creates its own (better) salt
+     * @param  ?string         $salt (optional) Omit if the hasher creates its own (better) salt
      **/
     public function __construct(HasherInterface $hasher, $salt = null)
     {
@@ -55,8 +55,9 @@ class Hash
     /**
      * Dynamically pass methods to the active hasher
      *
-     * @param string $method
-     * @param array $parameters
+     * @param  string  $method
+     * @param  mixed[] $parameters
+     * @return mixed
      */
     public function __call($method, $parameters)
     {
@@ -91,7 +92,8 @@ class Hash
     /**
      * Verify if the data matches the hash
      *
-     * @param mixed $data The data to verify against the hash string. This can either be a scalar value or a serializable value.
+     * @param mixed $data The data to verify against the hash string.
+     *                    This can either be a scalar value or a serializable value.
      * @param string $hash
      * @param mixed[] $options
      * @return bool
@@ -169,7 +171,8 @@ class Hash
         if (is_string($salt) && (strlen($salt) < 20 || strlen($salt) > CRYPT_SALT_LENGTH)) {
             // Make sure it's of sufficient length
             throw new InvalidArgumentException(sprintf(
-                'Provided salt "%s" does not match the length requirements. A length between 20 en %d characters is required.',
+                'Provided salt "%s" does not match the length requirements. ' .
+                'A length between 20 en %d characters is required.',
                 $salt,
                 CRYPT_SALT_LENGTH
             ));

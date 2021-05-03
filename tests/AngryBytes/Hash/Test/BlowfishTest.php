@@ -20,12 +20,10 @@ use AngryBytes\Hash\Hasher\Blowfish as BlowfishHasher;
  * @package         Hash
  * @subpackage      Test
  */
-class BlowfishTest extends \PHPUnit_Framework_TestCase
+class BlowfishTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test simple string hashing
-     *
-     * @return void
      **/
     public function testString()
     {
@@ -44,8 +42,6 @@ class BlowfishTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test complex serialized data hashing
-     *
-     * @return void
      **/
     public function testSerialized()
     {
@@ -116,12 +112,11 @@ class BlowfishTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test invalid work factor
-     *
-     * @expectedException \InvalidArgumentException
-     * @return void
      **/
     public function testWorkFactorTooLow()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $hasher = $this->createHasher();
 
         $hasher->getHasher()->setWorkFactor(3);
@@ -129,12 +124,11 @@ class BlowfishTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test invalid work factor
-     *
-     * @expectedException \InvalidArgumentException
-     * @return void
      **/
     public function testWorkFactorTooHigh()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $hasher = $this->createHasher();
 
         $hasher->getHasher()->setWorkFactor(32);
@@ -142,8 +136,6 @@ class BlowfishTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test work factor alteration
-     *
-     * @return void
      **/
     public function testWorkFactor()
     {
@@ -170,6 +162,7 @@ class BlowfishTest extends \PHPUnit_Framework_TestCase
     public function testSalt()
     {
         $hasher = $this->createHasher();
+
         $hasher->getHasher()->setWorkFactor(5);
 
         // Test salt with 22 valid characters
