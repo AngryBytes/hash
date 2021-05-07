@@ -55,8 +55,8 @@ class HMAC
      * This method accepts multiple variables as input, but is restricted to
      * strings. All input will be concatenated before hashing.
      *
-     * @param  string $sharedSecret
-     * @param array $args
+     * @param  string   $sharedSecret
+     * @param  string[] $args
      * @return string
      */
     public function hmac($sharedSecret, ...$args)
@@ -64,14 +64,6 @@ class HMAC
         // Get the data concatenated
         $data = '';
         foreach ($args as $index => $arg) {
-            // Sanity check
-            if (!is_string($arg)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Received a non-string argument at "%s"',
-                    $index
-                ));
-            }
-
             $data .= $arg;
         }
 
@@ -111,7 +103,8 @@ class HMAC
         // Sanity check
         if (!self::platformSupportsAlgorithm($algorithm)) {
             throw new InvalidArgumentException(sprintf(
-                '"%s" is not a supported hash algorithm on this platform'
+                '"%s" is not a supported hash algorithm on this platform',
+                $algorithm
             ));
         }
 

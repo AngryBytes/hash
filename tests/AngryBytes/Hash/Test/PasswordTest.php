@@ -20,7 +20,7 @@ use AngryBytes\Hash\Hasher\Password as PasswordHasher;
  * @package         Hash
  * @subpackage      Test
  */
-class PasswordTest extends \PHPUnit_Framework_TestCase
+class PasswordTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test password hash creation
@@ -76,11 +76,11 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test invalid cost factor
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testCostTooLow()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $hasher = $this->createHasher();
 
         $hasher->getHasher()->setCost(2);
@@ -88,11 +88,11 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test invalid cost factor
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testCostTooHigh()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $hasher = $this->createHasher();
 
         $hasher->getHasher()->setCost(42);

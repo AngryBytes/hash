@@ -47,12 +47,6 @@ class Blowfish implements HasherInterface
      */
     public function __construct($workFactor = null)
     {
-        if (!defined("CRYPT_BLOWFISH") || CRYPT_BLOWFISH !== 1) {
-            throw new RuntimeException(
-                'Blowfish hashing not available on this installation'
-            );
-        }
-
         if (is_int($workFactor)) {
             $this->setWorkFactor($workFactor);
         }
@@ -91,7 +85,7 @@ class Blowfish implements HasherInterface
      */
     public function hash($string, array $options = [])
     {
-        $salt = isset($options['salt']) ? $this->bcryptSalt($options['salt']) : null;
+        $salt = isset($options['salt']) ? $this->bcryptSalt($options['salt']) : '';
 
         return crypt($string, $salt);
     }
@@ -119,7 +113,7 @@ class Blowfish implements HasherInterface
     {
         return '$2y$'
             // Pad workfactor with 0's to the left, max 2 chars long
-            . str_pad($this->getWorkFactor(), 2, '0', STR_PAD_LEFT)
+            . str_pad((string) $this->getWorkFactor(), 2, '0', STR_PAD_LEFT)
             // Add salt itself
             . '$' .
             self::getSaltSubstr($salt)
@@ -146,7 +140,8 @@ class Blowfish implements HasherInterface
         // fallback to md5() to make the salt valid
         return substr(
             md5($salt),
-            0, 22
+            0,
+            22
         );
     }
 }

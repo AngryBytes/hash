@@ -22,8 +22,8 @@ interface HasherInterface
     /**
      * Hash a data string
      *
-     * @param string $string
-     * @param array $options Additional hasher options
+     * @param  string $string
+     * @param  mixed[] $options Additional hasher options
      * @return string
      **/
     public function hash($string, array $options = []);
@@ -31,9 +31,9 @@ interface HasherInterface
     /**
      * Verify is the data string matches the given hash
      *
-     * @param string $string
-     * @param string $hash
-     * @param array $options Additional hasher options
+     * @param  string $string
+     * @param  string $hash
+     * @param  mixed[] $options Additional hasher options
      * @return bool
      */
     public function verify($string, $hash, array $options = []);
