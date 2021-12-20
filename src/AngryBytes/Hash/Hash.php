@@ -1,15 +1,6 @@
 <?php
-/**
- * Hash.php
- *
- * @category    AngryBytes
- * @package     Hash
- * @copyright   Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
- */
 
 namespace AngryBytes\Hash;
-
-use \InvalidArgumentException;
 
 /**
  * A collection of hash generation and comparison methods.
@@ -19,33 +10,19 @@ use \InvalidArgumentException;
  *
  * Providing a salt is strictly optional, and should not be provided when the
  * hasher provides better salt generation methods.
- *
- * @category    AngryBytes
- * @package     Hash
  */
 class Hash
 {
-    /**
-     * Salt for hashing
-     *
-     * @var string|null
-     **/
-    private $salt;
+    /** Hasher to use */
+    private HasherInterface $hasher;
+    /** Salt for hashing */
+    private ?string $salt;
 
     /**
-     * Hasher
-     *
-     * @var HasherInterface
-     **/
-    private $hasher;
-
-    /**
-     * Constructor
-     *
-     * @param  HasherInterface $hasher The hasher to be used
-     * @param  ?string         $salt (optional) Omit if the hasher creates its own (better) salt
-     **/
-    public function __construct(HasherInterface $hasher, $salt = null)
+     * @param HasherInterface $hasher The hasher to be used
+     * @param ?string         $salt   (optional) Omit if the hasher creates its own (better) salt
+     */
+    public function __construct(HasherInterface $hasher, ?string $salt = null)
     {
         $this->hasher = $hasher;
 
@@ -55,21 +32,18 @@ class Hash
     /**
      * Dynamically pass methods to the active hasher
      *
-     * @param  string  $method
      * @param  mixed[] $parameters
      * @return mixed
      */
-    public function __call($method, $parameters)
+    public function __call(string $method, array $parameters)
     {
         return $this->hasher->$method(...$parameters);
     }
 
     /**
      * Get the hasher to use for the actual hashing
-     *
-     * @return HasherInterface
      */
-    public function getHasher()
+    public function getHasher(): HasherInterface
     {
         return $this->hasher;
     }
@@ -77,11 +51,10 @@ class Hash
     /**
      * Generate a hash
      *
-     * @param mixed $data The data to hash. This can either be a scalar value or a serializable value.
+     * @param mixed   $data The data to hash. This can either be a scalar value or a serializable value.
      * @param mixed[] $options Additional hasher options (the actual options depend on the registered Hasher)
-     * @return string
-     **/
-    public function hash($data, array $options = [])
+     */
+    public function hash($data, array $options = []): string
     {
         return $this->hasher->hash(
             self::getDataString($data),
@@ -92,13 +65,11 @@ class Hash
     /**
      * Verify if the data matches the hash
      *
-     * @param mixed $data The data to verify against the hash string.
-     *                    This can either be a scalar value or a serializable value.
-     * @param string $hash
+     * @param mixed   $data The data to verify against the hash string.
+     *                      This can either be a scalar value or a serializable value.
      * @param mixed[] $options
-     * @return bool
      */
-    public function verify($data, $hash, array $options = [])
+    public function verify($data, string $hash, array $options = []): bool
     {
         return $this->hasher->verify(
             self::getDataString($data),
@@ -119,11 +90,10 @@ class Hash
      *
      * @see Hash::hash()
      *
-     * @param string $data
+     * @param mixed   $data
      * @param mixed[] $options
-     * @return string
      */
-    public function shortHash($data, array $options = [])
+    public function shortHash($data, array $options = []): string
     {
         return substr($this->hash($data, $options), 0, 7);
     }
@@ -133,12 +103,10 @@ class Hash
      *
      * @see Hash::shortHash()
      *
-     * @param mixed $data
-     * @param string $shortHash
+     * @param mixed   $data
      * @param mixed[] $options
-     * @return bool
-     **/
-    public function verifyShortHash($data, $shortHash, array $options = [])
+     */
+    public function verifyShortHash($data, string $shortHash, array $options = []): bool
     {
         return self::compare(
             $this->shortHash($data, $options),
@@ -150,12 +118,8 @@ class Hash
      * Compare two hashes
      *
      * Uses the time-save `hash_equals()` function to compare 2 hashes.
-     *
-     * @param  string $hashA
-     * @param  string $hashB
-     * @return bool
-     **/
-    public static function compare($hashA, $hashB)
+     */
+    public static function compare(string $hashA, string $hashB): bool
     {
         return hash_equals($hashA, $hashB);
     }
@@ -163,14 +127,13 @@ class Hash
     /**
      * Set the salt
      *
-     * @param  string|null $salt
-     * @return Hash
+     * @return $this
      */
-    protected function setSalt($salt)
+    protected function setSalt(?string $salt = null): self
     {
         if (is_string($salt) && (strlen($salt) < 20 || strlen($salt) > CRYPT_SALT_LENGTH)) {
             // Make sure it's of sufficient length
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 'Provided salt "%s" does not match the length requirements. ' .
                 'A length between 20 en %d characters is required.',
                 $salt,
@@ -189,9 +152,8 @@ class Hash
      * Will serialize non-scalar values
      *
      * @param mixed $data
-     * @return string
      */
-    private static function getDataString($data)
+    private static function getDataString($data): string
     {
         if (is_scalar($data)) {
             return (string) $data;
@@ -206,7 +168,7 @@ class Hash
      * Automatically sets the salt as an option when set in this
      * component.
      *
-     * @param mixed[] $options
+     * @param  mixed[] $options
      * @return mixed[]
      */
     private function parseHashOptions(array $options = [])

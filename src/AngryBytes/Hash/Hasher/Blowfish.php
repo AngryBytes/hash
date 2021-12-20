@@ -1,20 +1,9 @@
 <?php
-/**
- * Blowfish.php
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Hasher
- * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
- */
 
 namespace AngryBytes\Hash\Hasher;
 
 use AngryBytes\Hash\Hash;
 use AngryBytes\Hash\HasherInterface;
-
-use \RuntimeException;
-use \InvalidArgumentException;
 
 /**
  * Blowfish Hasher
@@ -22,9 +11,6 @@ use \InvalidArgumentException;
  * Generate and verify Blowfish bcrypt/crypt() hashes.
  *
  * @see AngryBytes\Hasher\Password For a password hasher
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Hasher
  */
 class Blowfish implements HasherInterface
 {
@@ -32,20 +18,10 @@ class Blowfish implements HasherInterface
      * Work factor for blowfish
      *
      * Defaults to '15' (32768 iterations)
-     *
-     * @var int
-     **/
-    private $workFactor = 15;
-
-    /**
-     * Construct
-     *
-     * Detect Blowfish support
-     *
-     * @throws \RuntimeException
-     * @param null|int $workFactor Override workfactor
      */
-    public function __construct($workFactor = null)
+    private int $workFactor = 15;
+
+    public function __construct(?int $workFactor = null)
     {
         if (is_int($workFactor)) {
             $this->setWorkFactor($workFactor);
@@ -54,24 +30,19 @@ class Blowfish implements HasherInterface
 
     /**
      * Get the blowfish work factor
-     *
-     * @return int
      */
-    public function getWorkFactor()
+    public function getWorkFactor(): int
     {
         return $this->workFactor;
     }
 
     /**
      * Set the blowfish work factor
-     *
-     * @param  int $workFactor
-     * @return Blowfish
      */
-    public function setWorkFactor($workFactor)
+    public function setWorkFactor(int $workFactor): self
     {
         if ($workFactor < 4 || $workFactor > 31) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'Work factor needs to be greater than 3 and smaller than 32'
             );
         }
@@ -83,9 +54,13 @@ class Blowfish implements HasherInterface
     /**
      * {@inheritDoc}
      */
-    public function hash($string, array $options = [])
+    public function hash(string $string, array $options = []): string
     {
-        $salt = isset($options['salt']) ? $this->bcryptSalt($options['salt']) : '';
+        $salt = '';
+        if (isset($options['salt'])) {
+            assert(is_string($options['salt']));
+            $salt = $this->bcryptSalt($options['salt']);
+        }
 
         return crypt($string, $salt);
     }
@@ -95,7 +70,7 @@ class Blowfish implements HasherInterface
      *
      * @see Hash::compare()
      */
-    public function verify($string, $hash, array $options = [])
+    public function verify(string $string, string $hash, array $options = []): bool
     {
         return Hash::compare(
             $this->hash($string, $options),
@@ -106,10 +81,9 @@ class Blowfish implements HasherInterface
     /**
      * Generate a bcrypt salt from a string salt
      *
-     * @param  string $salt
-     * @return string       Format: "$2y$[workfactor]$[salt]$"
-     **/
-    private function bcryptSalt($salt)
+     * @return string Format: "$2y$[workfactor]$[salt]$"
+     */
+    private function bcryptSalt(string $salt): string
     {
         return '$2y$'
             // Pad workfactor with 0's to the left, max 2 chars long
@@ -126,11 +100,8 @@ class Blowfish implements HasherInterface
      *
      * Blowfish accepts 22 chars (./0-9A-Za-z) as a salt if anything else is passed,
      * this method will take a hash of $salt to transform it into 22 supported characters
-     *
-     * @param  string $salt
-     * @return string
-     **/
-    private static function getSaltSubstr($salt)
+     */
+    private static function getSaltSubstr(string $salt): string
     {
         // Return salt when it is a valid Blowfish salt
         if (preg_match('!^[\./0-9A-Za-z]{22}$!', $salt) === 1) {

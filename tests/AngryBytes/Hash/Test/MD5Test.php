@@ -1,12 +1,4 @@
 <?php
-/**
- * MD5Test.php
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Test
- * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
- */
 
 namespace AngryBytes\Hash\Test;
 
@@ -15,17 +7,13 @@ use AngryBytes\Hash\Hasher\MD5 as MD5Hasher;
 
 /**
  * Test the md5 hasher
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Test
  */
 class MD5Test extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test hashing of strings
-     **/
-    public function testHashString()
+     */
+    public function testHashString(): void
     {
         $hasher = $this->createHasher();
 
@@ -42,8 +30,8 @@ class MD5Test extends \PHPUnit\Framework\TestCase
 
     /**
      * Test hashing of complex data
-     **/
-    public function testHashObject()
+     */
+    public function testHashObject(): void
     {
         $hasher = $this->createHasher();
 
@@ -66,7 +54,7 @@ class MD5Test extends \PHPUnit\Framework\TestCase
     /**
      * Test verification of string hashes
      */
-    public function testVerifyString()
+    public function testVerifyString(): void
     {
         $hasher = $this->createHasher();
 
@@ -82,7 +70,7 @@ class MD5Test extends \PHPUnit\Framework\TestCase
     /**
      * Test verification of object hashes
      */
-    public function testVerifyHashObject()
+    public function testVerifyHashObject(): void
     {
         $hasher = $this->createHasher();
 
@@ -102,12 +90,9 @@ class MD5Test extends \PHPUnit\Framework\TestCase
 
     /**
      * Create hasher
-     *
-     * @return Hash
-     **/
-    private function createHasher()
+     */
+    private function createHasher(): Hash
     {
-        // Hasher
         return new Hash(
             new MD5Hasher,
             '909b96914de6866224f70f52a13e9fa6'

@@ -1,12 +1,4 @@
 <?php
-/**
- * MD5.php
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Hasher
- * @copyright       Copyright (c) 2010 Angry Bytes BV (http://www.angrybytes.com)
- */
 
 namespace AngryBytes\Hash\Hasher;
 
@@ -24,17 +16,13 @@ use AngryBytes\Hash\HasherInterface;
  * to use the Hasher\Password for this purpose
  *
  * @see AngryBytes\Hasher\Password For a password hasher
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Hasher
  */
 class MD5 implements HasherInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function hash($string, array $options = [])
+    public function hash(string $string, array $options = []): string
     {
         $salt = isset($options['salt']) ? $options['salt'] : '';
 
@@ -46,7 +34,7 @@ class MD5 implements HasherInterface
      *
      * @see Hash::compare()
      */
-    public function verify($string, $hash, array $options = [])
+    public function verify(string $string, string $hash, array $options = []): bool
     {
         return Hash::compare(
             $this->hash($string, $options),

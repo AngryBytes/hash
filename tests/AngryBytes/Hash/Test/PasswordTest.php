@@ -1,12 +1,4 @@
 <?php
-/**
- * PasswordTest.php
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Test
- * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
- */
 
 namespace AngryBytes\Hash\Test;
 
@@ -15,17 +7,13 @@ use AngryBytes\Hash\Hasher\Password as PasswordHasher;
 
 /**
  * Test the password hasher
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Test
  */
 class PasswordTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test password hash creation
      */
-    public function testHash()
+    public function testHash(): void
     {
         $hasher = $this->createHasher();
 
@@ -39,7 +27,7 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
     /**
      * Test password hash verification
      */
-    public function testStringVerify()
+    public function testStringVerify(): void
     {
         $hasher = $this->createHasher();
 
@@ -55,60 +43,62 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
     /**
      * Test password hash rehash
      */
-    public function testRehash()
+    public function testRehash(): void
     {
         $hasher = $this->createHasher();
+        $impl = $hasher->getHasher();
+        assert($impl instanceof PasswordHasher);
 
         // Create hash
         $hash = $hasher->hash('foo');
 
         $this->assertFalse(
-            $hasher->getHasher()->needsRehash($hash)
+            $impl->needsRehash($hash)
         );
 
         // Adjust the hash cost, this should require a rehash
-        $hasher->getHasher()->setCost(15);
+        $impl->setCost(15);
 
         $this->assertTrue(
-            $hasher->getHasher()->needsRehash($hash)
+            $impl->needsRehash($hash)
         );
     }
 
     /**
      * Test invalid cost factor
      */
-    public function testCostTooLow()
+    public function testCostTooLow(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         $hasher = $this->createHasher();
+        $impl = $hasher->getHasher();
+        assert($impl instanceof PasswordHasher);
 
-        $hasher->getHasher()->setCost(2);
+        $impl->setCost(2);
     }
 
     /**
      * Test invalid cost factor
      */
-    public function testCostTooHigh()
+    public function testCostTooHigh(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         $hasher = $this->createHasher();
+        $impl = $hasher->getHasher();
+        assert($impl instanceof PasswordHasher);
 
-        $hasher->getHasher()->setCost(42);
+        $impl->setCost(42);
     }
 
     /**
      * Create hasher
-     *
-     * @return Hash
-     **/
-    private function createHasher()
+     */
+    private function createHasher(): Hash
     {
-        // Hasher
         return new Hash(
             new PasswordHasher
         );
     }
 }
-
