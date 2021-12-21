@@ -1,12 +1,4 @@
 <?php
-/**
- * BlowfishTest.php
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Test
- * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
- */
 
 namespace AngryBytes\Hash\Test;
 
@@ -15,17 +7,13 @@ use AngryBytes\Hash\Hasher\Blowfish as BlowfishHasher;
 
 /**
  * Test the blowfish hasher
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Test
  */
 class BlowfishTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test simple string hashing
-     **/
-    public function testString()
+     */
+    public function testString(): void
     {
         $hasher = $this->createHasher();
 
@@ -42,8 +30,8 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Test complex serialized data hashing
-     **/
-    public function testSerialized()
+     */
+    public function testSerialized(): void
     {
         $hasher = $this->createHasher();
 
@@ -71,7 +59,7 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
     /**
      * Test verification of string hashes
      */
-    public function testStringVerify()
+    public function testStringVerify(): void
     {
         $hasher = $this->createHasher();
 
@@ -87,7 +75,7 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
     /**
      * Test verification of object hashes
      */
-    public function testObjectVerify()
+    public function testObjectVerify(): void
     {
         $hasher = $this->createHasher();
 
@@ -112,36 +100,42 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Test invalid work factor
-     **/
-    public function testWorkFactorTooLow()
+     */
+    public function testWorkFactorTooLow(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         $hasher = $this->createHasher();
+        $impl = $hasher->getHasher();
+        assert($impl instanceof BlowfishHasher);
 
-        $hasher->getHasher()->setWorkFactor(3);
+        $impl->setWorkFactor(3);
     }
 
     /**
      * Test invalid work factor
-     **/
-    public function testWorkFactorTooHigh()
+     */
+    public function testWorkFactorTooHigh(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         $hasher = $this->createHasher();
+        $impl = $hasher->getHasher();
+        assert($impl instanceof BlowfishHasher);
 
-        $hasher->getHasher()->setWorkFactor(32);
+        $impl->setWorkFactor(32);
     }
 
     /**
      * Test work factor alteration
-     **/
-    public function testWorkFactor()
+     */
+    public function testWorkFactor(): void
     {
         $hasher = $this->createHasher();
+        $impl = $hasher->getHasher();
+        assert($impl instanceof BlowfishHasher);
 
-        $hasher->getHasher()->setWorkFactor(5);
+        $impl->setWorkFactor(5);
 
         // Simple string
         $this->assertEquals(
@@ -149,7 +143,7 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
             $hasher->hash('foo')
         );
 
-        $hasher->getHasher()->setWorkFactor(10);
+        $impl->setWorkFactor(10);
         $this->assertEquals(
             '$2y$10$aa5c57dda7634fc90a92duoe.XRVTsrN1oW9P.qnaa.W0BGQ9olPy',
             $hasher->hash('foo')
@@ -158,18 +152,20 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Test salting
-     **/
-    public function testSalt()
+     */
+    public function testSalt(): void
     {
         $hasher = $this->createHasher();
+        $impl = $hasher->getHasher();
+        assert($impl instanceof BlowfishHasher);
 
-        $hasher->getHasher()->setWorkFactor(5);
+        $impl->setWorkFactor(5);
 
         // Test salt with 22 valid characters
         $this->assertEquals(
             // Pre-generated hash outcome for password 'foo' and given salt
             '$2y$05$./A1aaaaaaaaaaaaaaaaaOZW9OJaO6Alj4.ZDbOi6Jrbn.bGZfYRK',
-            $hasher->getHasher()->hash(
+            $impl->hash(
                 'foo',
                 ['salt' => './A1aaaaaaaaaaaaaaaaaa']
             )
@@ -179,7 +175,7 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             // Pre-generated hash outcome for password 'foo' and given salt (md5'ed)
             '$2y$05$ceb20772e0c9d240c75ebugm2AOmnuR5.LsdpDZGAjkE1DupDTPFW',
-            $hasher->getHasher()->hash(
+            $impl->hash(
                 'foo',
                 ['salt' => 'salt']
             )
@@ -188,16 +184,12 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Create hasher
-     *
-     * @return Hash
-     **/
-    private function createHasher()
+     */
+    private function createHasher(): Hash
     {
-        // Hasher
         return new Hash(
             new BlowfishHasher,
             '909b96914de6866224f70f52a13e9fa6'
         );
     }
 }
-

@@ -1,12 +1,4 @@
 <?php
-/**
- * HashLibTest.php
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Test
- * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
- */
 
 namespace AngryBytes\Hash\Test;
 
@@ -14,21 +6,20 @@ use AngryBytes\Hash\Hash;
 
 /**
  * Test the Hash Lib
- *
- * @category        AngryBytes
- * @package         Hash
- * @subpackage      Test
  */
 class HashLibTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test new hasher with valid salt
+     *
+     * @doesNotPerformAssertions
      */
-    public function testValidSalt()
+    public function testValidSalt(): void
     {
         new Hash(
             new \AngryBytes\Hash\Hasher\MD5
         );
+
         new Hash(
             new \AngryBytes\Hash\Hasher\MD5,
             str_repeat('a', 20)
@@ -38,7 +29,7 @@ class HashLibTest extends \PHPUnit\Framework\TestCase
     /**
      * Test new hasher with salt set too short
      */
-    public function testSaltTooShort()
+    public function testSaltTooShort(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -51,7 +42,7 @@ class HashLibTest extends \PHPUnit\Framework\TestCase
     /**
      * Test new hasher with salt set too long
      */
-    public function testSaltTooLong()
+    public function testSaltTooLong(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 

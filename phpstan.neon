@@ -1,8 +1,7 @@
 parameters:
-	reportUnmatchedIgnoredErrors: false
-	ignoreErrors:
-		-
-			message: "#^Strict comparison using \\=\\=\\= between string and false will always evaluate to false\\.$#"
-			count: 1
-			path: src/AngryBytes/Hash/Hasher/Password.php
-
+  # @todo: Remove once we drop PHP 7.4
+  reportUnmatchedIgnoredErrors: false
+  ignoreErrors:
+    - message: "#^Strict comparison using \\=\\=\\= between string and false will always evaluate to false\\.$#"
+      count: 1
+      path: src/AngryBytes/Hash/Hasher/Password.php

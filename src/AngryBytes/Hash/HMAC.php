@@ -1,50 +1,28 @@
 <?php
-/**
- * HMAC.php
- *
- * @category        AngryBytes
- * @package         Hash
- * @copyright       Copyright (c) 2007-2016 Angry Bytes BV (http://www.angrybytes.com)
- */
 
 namespace AngryBytes\Hash;
-
-use \InvalidArgumentException;
 
 /**
  * HMAC creator
  *
  * This class will generate hashes to be used as HMAC
- *
- * @category        AngryBytes
- * @package         Hash
  */
 class HMAC
 {
     /**
      * Algorithm to use
-     *
-     * @var string
-     **/
-    private $algorithm;
+     */
+    private string $algorithm;
 
-    /**
-     * Constructor
-     *
-     * @param string $algorithm
-     **/
-    public function __construct($algorithm)
+    public function __construct(string $algorithm)
     {
         $this->setAlgorithm($algorithm);
     }
 
     /**
      * Does this platform support an algorithm?
-     *
-     * @param string $algorithm
-     * @return bool
-     **/
-    public static function platformSupportsAlgorithm($algorithm)
+     */
+    public static function platformSupportsAlgorithm(string $algorithm): bool
     {
         return in_array($algorithm, hash_algos());
     }
@@ -55,11 +33,9 @@ class HMAC
      * This method accepts multiple variables as input, but is restricted to
      * strings. All input will be concatenated before hashing.
      *
-     * @param  string   $sharedSecret
-     * @param  string[] $args
-     * @return string
+     * @param string[] $args
      */
-    public function hmac($sharedSecret, ...$args)
+    public function hmac(string $sharedSecret, ...$args): string
     {
         // Get the data concatenated
         $data = '';
@@ -76,13 +52,8 @@ class HMAC
 
     /**
      * Check if a (received) message has a valid HMAC
-     *
-     * @param  string $message
-     * @param  string $hmac
-     * @param  string $sharedSecret
-     * @return bool
-     **/
-    public function validHmac($message, $hmac, $sharedSecret)
+     */
+    public function validHmac(string $message, string $hmac, string $sharedSecret): bool
     {
         // Compare HMAC with received message
         return Hash::compare(
@@ -94,15 +65,12 @@ class HMAC
 
     /**
      * Set the algorithm to use
-     *
-     * @param  string $algorithm
-     * @return HMAC
      */
-    protected function setAlgorithm($algorithm)
+    protected function setAlgorithm(string $algorithm): HMAC
     {
         // Sanity check
         if (!self::platformSupportsAlgorithm($algorithm)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 '"%s" is not a supported hash algorithm on this platform',
                 $algorithm
             ));
