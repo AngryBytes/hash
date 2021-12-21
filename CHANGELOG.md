@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.0.0
+
+## PHP Support
+
+The minimum supported PHP version is now 7.4.
+
+Support was added for PHP 8.1
+
 ## 3.0.0
 
 ## PHP Support
