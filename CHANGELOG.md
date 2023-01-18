@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.1
+
+## PHP Support
+
+Support was added for PHP 8.2
+
 ## 4.0.0
 
 ## PHP Support
