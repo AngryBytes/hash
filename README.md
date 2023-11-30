@@ -10,7 +10,7 @@ object oriented interface to a variety of hashing methods.
 
 ## Requirements
 
-* PHP `7.3`, `7.4` or PHP `8.0` (recommended)
+* PHP `8.1`, `8.2` or PHP `8.3` (recommended)
 
 ## Installation
 
