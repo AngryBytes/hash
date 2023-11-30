@@ -51,10 +51,9 @@ class Hash
     /**
      * Generate a hash
      *
-     * @param mixed   $data The data to hash. This can either be a scalar value or a serializable value.
      * @param mixed[] $options Additional hasher options (the actual options depend on the registered Hasher)
      */
-    public function hash($data, array $options = []): string
+    public function hash(mixed $data, array $options = []): string
     {
         return $this->hasher->hash(
             self::getDataString($data),
@@ -65,11 +64,9 @@ class Hash
     /**
      * Verify if the data matches the hash
      *
-     * @param mixed   $data The data to verify against the hash string.
-     *                      This can either be a scalar value or a serializable value.
      * @param mixed[] $options
      */
-    public function verify($data, string $hash, array $options = []): bool
+    public function verify(mixed $data, string $hash, array $options = []): bool
     {
         return $this->hasher->verify(
             self::getDataString($data),
@@ -82,7 +79,7 @@ class Hash
      * Hash something into a short hash
      *
      * This is simply a shortened version of hash(), returning a 7 character hash, which should be good
-     * enough for identification purposes. Therefore it MUST NOT be used for cryptographic purposes or
+     * enough for identification purposes. Therefore, it MUST NOT be used for cryptographic purposes or
      * password storage but only to create a fast, short string to compare or identify.
      *
      * It is RECOMMENDED to only use this method with the Hasher\MD5 hasher as hashes
@@ -90,10 +87,9 @@ class Hash
      *
      * @see Hash::hash()
      *
-     * @param mixed   $data
      * @param mixed[] $options
      */
-    public function shortHash($data, array $options = []): string
+    public function shortHash(mixed $data, array $options = []): string
     {
         return substr($this->hash($data, $options), 0, 7);
     }
@@ -103,10 +99,9 @@ class Hash
      *
      * @see Hash::shortHash()
      *
-     * @param mixed   $data
      * @param mixed[] $options
      */
-    public function verifyShortHash($data, string $shortHash, array $options = []): bool
+    public function verifyShortHash(mixed $data, string $shortHash, array $options = []): bool
     {
         return self::compare(
             $this->shortHash($data, $options),
@@ -150,10 +145,8 @@ class Hash
      * Get the data as a string
      *
      * Will serialize non-scalar values
-     *
-     * @param mixed $data
      */
-    private static function getDataString($data): string
+    private static function getDataString(mixed $data): string
     {
         if (is_scalar($data)) {
             return (string) $data;
@@ -171,7 +164,7 @@ class Hash
      * @param  mixed[] $options
      * @return mixed[]
      */
-    private function parseHashOptions(array $options = [])
+    private function parseHashOptions(array $options = []): array
     {
         $defaultOptions = [];
 

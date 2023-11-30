@@ -2,11 +2,10 @@
 
 [![Author](http://img.shields.io/badge/author-@angrybytes-blue.svg?style=flat-square)](https://twitter.com/angrybytes)
 [![Software License](https://img.shields.io/badge/license-proprietary-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://travis-ci.org/AngryBytes/hash.svg?branch=master)](https://travis-ci.org/AngryBytes/hash)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/AngryBytes/hash/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/AngryBytes/hash/?branch=master)
+[![Build Status](https://github.com/AngryBytes/hash/actions/workflows/php-checks.yml/badge.svg?event=push)
 
 A simple PHP library that simplifies cryptographical hashing. It provides an
-object oriented interface to a variety of hashing methods.
+object-oriented interface to a variety of hashing methods.
 
 ## Requirements
 
@@ -32,7 +31,7 @@ Some of the main features of this component:
 
 ### Hashers
 
-This library comes with a set of hashers to be utilised by this hash component (or
+This library comes with a set of hashers to be utilized by this hash component (or
 to be used on their own):
 
  * `AngryBytes\Hash\Hasher\BlowFish`

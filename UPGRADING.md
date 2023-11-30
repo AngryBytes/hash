@@ -6,8 +6,8 @@ This document lists important upgrade nodes and BC breaks per version.
 
 ### Update Hashing Values
 
-If you are hashing multiple values you will need to change the way their are passed
-to the hasher. Instead of passing each variable separately you will need to pass
+If you are hashing multiple values, you will need to change the way they are passed
+to the hasher. Instead of passing each variable separately, you will need to pass
 them as an array. Like so:
 
 ```php
@@ -30,8 +30,8 @@ The same principle applies to `Hash::shortHash()`.
 
 ### Update Hash Validation
 
-In the previous version hash validation would be done by creating a hash and comparing
-it to the existing hash. Now, you can simple pass the value(s) to hash and the
+In the previous version, hash validation would be done by creating a hash and comparing
+it to the existing hash. Now, you can simply pass the value(s) to hash and the
 existing hash to methods: `verify()` or `verfiyShortHash()`.
 
 ```php
