@@ -15,7 +15,7 @@ use AngryBytes\Hash\HasherInterface;
  * This hasher MUST NOT be used for password storage. It is RECOMMENDED
  * to use the Hasher\Password for this purpose
  *
- * @see AngryBytes\Hasher\Password For a password hasher
+ * @see Password For a password hasher
  */
 class MD5 implements HasherInterface
 {
@@ -24,7 +24,7 @@ class MD5 implements HasherInterface
      */
     public function hash(string $string, array $options = []): string
     {
-        $salt = isset($options['salt']) ? $options['salt'] : '';
+        $salt = $options['salt'] ?? '';
 
         return md5($string . '-' . $salt);
     }

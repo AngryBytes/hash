@@ -24,14 +24,14 @@ class HMAC
      */
     public static function platformSupportsAlgorithm(string $algorithm): bool
     {
-        return in_array($algorithm, hash_algos());
+        return in_array($algorithm, hash_algos(), true);
     }
 
     /**
      * Create an HMAC
      *
      * This method accepts multiple variables as input, but is restricted to
-     * strings. All input will be concatenated before hashing.
+     * strings. All inputs will be concatenated before hashing.
      *
      * @param string[] $args
      */
@@ -39,7 +39,7 @@ class HMAC
     {
         // Get the data concatenated
         $data = '';
-        foreach ($args as $index => $arg) {
+        foreach ($args as $arg) {
             $data .= $arg;
         }
 
@@ -55,7 +55,7 @@ class HMAC
      */
     public function validHmac(string $message, string $hmac, string $sharedSecret): bool
     {
-        // Compare HMAC with received message
+        // Compare HMAC with a received message
         return Hash::compare(
             $hmac,
             // The HMAC as it should be for our shared secret
