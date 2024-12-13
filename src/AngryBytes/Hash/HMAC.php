@@ -39,6 +39,7 @@ class HMAC
     {
         // Get the data concatenated
         $data = '';
+        /** @var string $arg */
         foreach ($args as $arg) {
             $data .= $arg;
         }

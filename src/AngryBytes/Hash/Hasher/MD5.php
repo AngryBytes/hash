@@ -25,6 +25,7 @@ class MD5 implements HasherInterface
     public function hash(string $string, array $options = []): string
     {
         $salt = $options['salt'] ?? '';
+        assert(is_string($salt));
 
         return md5($string . '-' . $salt);
     }

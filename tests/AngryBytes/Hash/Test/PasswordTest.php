@@ -98,7 +98,7 @@ class PasswordTest extends \PHPUnit\Framework\TestCase
     private function createHasher(): Hash
     {
         return new Hash(
-            new PasswordHasher
+            new PasswordHasher()
         );
     }
 }

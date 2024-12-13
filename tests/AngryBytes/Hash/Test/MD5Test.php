@@ -35,7 +35,7 @@ class MD5Test extends \PHPUnit\Framework\TestCase
     {
         $hasher = $this->createHasher();
 
-        $obj = new \stdClass;
+        $obj = new \stdClass();
         $obj->foo = 'bar';
 
         $this->assertEquals(
@@ -74,7 +74,7 @@ class MD5Test extends \PHPUnit\Framework\TestCase
     {
         $hasher = $this->createHasher();
 
-        $obj = new \stdClass;
+        $obj = new \stdClass();
         $obj->foo = 'bar';
 
         $this->assertTrue(
@@ -94,7 +94,7 @@ class MD5Test extends \PHPUnit\Framework\TestCase
     private function createHasher(): Hash
     {
         return new Hash(
-            new MD5Hasher,
+            new MD5Hasher(),
             '909b96914de6866224f70f52a13e9fa6'
         );
     }

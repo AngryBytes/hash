@@ -36,11 +36,11 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
         $hasher = $this->createHasher();
 
         // Complex data
-        $data = array(
-            new \stdClass,
-            array('foo', 'bar'),
-            12345
-        );
+        $data = [
+            new \stdClass(),
+            ['foo', 'bar'],
+            12345,
+        ];
         $this->assertEquals(
             '$2y$15$aa5c57dda7634fc90a92duDv2OoNSn8R.p3.GSoaEZd6/vdiiq9lG',
             $hasher->hash($data)
@@ -80,11 +80,11 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
         $hasher = $this->createHasher();
 
         // Complex data
-        $data = array(
-            new \stdClass,
-            array('foo', 'bar'),
-            12345
-        );
+        $data = [
+            new \stdClass(),
+            ['foo', 'bar'],
+            12345,
+        ];
 
         $this->assertTrue(
             $hasher->verify($data, '$2y$15$aa5c57dda7634fc90a92duDv2OoNSn8R.p3.GSoaEZd6/vdiiq9lG')
@@ -188,7 +188,7 @@ class BlowfishTest extends \PHPUnit\Framework\TestCase
     private function createHasher(): Hash
     {
         return new Hash(
-            new BlowfishHasher,
+            new BlowfishHasher(),
             '909b96914de6866224f70f52a13e9fa6'
         );
     }

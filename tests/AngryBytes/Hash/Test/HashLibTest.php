@@ -17,11 +17,11 @@ class HashLibTest extends \PHPUnit\Framework\TestCase
     public function testValidSalt(): void
     {
         new Hash(
-            new \AngryBytes\Hash\Hasher\MD5
+            new \AngryBytes\Hash\Hasher\MD5()
         );
 
         new Hash(
-            new \AngryBytes\Hash\Hasher\MD5,
+            new \AngryBytes\Hash\Hasher\MD5(),
             str_repeat('a', 20)
         );
     }
@@ -34,7 +34,7 @@ class HashLibTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         new Hash(
-            new \AngryBytes\Hash\Hasher\MD5,
+            new \AngryBytes\Hash\Hasher\MD5(),
             str_repeat('a', 19)
         );
     }
@@ -47,7 +47,7 @@ class HashLibTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         new Hash(
-            new \AngryBytes\Hash\Hasher\MD5,
+            new \AngryBytes\Hash\Hasher\MD5(),
             str_repeat('a', CRYPT_SALT_LENGTH + 1)
         );
     }
