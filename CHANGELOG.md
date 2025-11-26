@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.1
+
+- Added support for PHP `8.5`.
+
 ## 6.0.0
 
 ### PHP support
